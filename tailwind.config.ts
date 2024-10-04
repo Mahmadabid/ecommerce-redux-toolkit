@@ -10,6 +10,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        'h-color': '#415F6B',
+        'b-color': '#1b2e3c'
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -20,7 +24,8 @@ const config: Config = {
       'xsm': {'max': '320px'},
       'xmd': {'max': '650px'},
       'nmd': {'min': '651px'},
-      ...defaultTheme.screens,
+      'xxsm': {'min': '300px'},
+      ...defaultTheme.screens
     }
   },
   plugins: [],

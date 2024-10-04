@@ -16,7 +16,7 @@ const Header = () => {
   // const { cartItems } = useCartContext();
 
   return (
-    <header className="bg-[#1b2e3c] p-4 xse:p-[10px] z-50 text-white shadow-md relative flex justify-center items-center">
+    <header className="bg-b-color p-4 xse:p-[10px] z-50 text-white shadow-md relative flex justify-center items-center">
       {loggingOut && (
         <div
           className="fixed top-0 left-0 w-full h-full bg-gray-950 opacity-95 flex flex-col space-y-2 items-center justify-center"

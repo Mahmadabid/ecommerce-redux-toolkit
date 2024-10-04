@@ -18,8 +18,9 @@ export default function Home() {
           <Image
             src="/backgroundHome.png"
             alt="Home page"
-            layout="fill"
-            objectFit="cover"
+            fill
+            priority
+            style={{objectFit: 'cover'}}
           />
         </div>
 
@@ -28,12 +29,12 @@ export default function Home() {
         </div>
       </div>
       <div className="text-center">
-        <h1 className="text-6xl xsm:text-4xl font-bold mt-10">Welcome!</h1>
+        <h1 className="text-6xl xsm:text-4xl font-bold text-h-color mt-10">Welcome!</h1>
         <div className="flex flex-row items-center justify-center space-x-9 mt-7">
           <div className="border border-slate-200 bg-gray-100 rounded p-2">
             <p className="text-3xl xsm:text-2xl mb-2">Want to buy?</p>
             <Link href="/products" className="mt-4">
-              <div className="inline-flex items-center justify-center p-4 border rounded-lg shadow-lg bg-sky-600 text-white hover:text-black hover:bg-gray-100 transition duration-300">
+              <div className="inline-flex items-center justify-center p-4 border rounded-lg shadow-lg button-style transition duration-300">
                 <FontAwesomeIcon icon={faCartShopping} className="text-3xl" />
               </div>
             </Link>
@@ -41,7 +42,7 @@ export default function Home() {
           <div className="border border-slate-200 bg-gray-100 rounded p-2">
             <p className="text-3xl xsm:text-2xl mb-2">Want to Sell?</p>
             <Link href="/store" className="mt-4">
-              <div className="inline-flex items-center justify-center p-4 border rounded-lg shadow-lg bg-sky-600 text-white hover:text-black hover:bg-gray-100 transition duration-300">
+              <div className="inline-flex items-center justify-center p-4 border rounded-lg shadow-lg button-style transition duration-300">
                 <FontAwesomeIcon icon={faCashRegister} className="text-3xl" />
               </div>
             </Link>
@@ -54,7 +55,7 @@ export default function Home() {
                 <>
                   <p className="text-3xl xsm:text-2xl mb-2">View Profile</p>
                   <Link href="/profile" className="mt-4">
-                    <div className="inline-flex items-center justify-center p-4 border rounded-lg shadow-lg bg-sky-600 text-white hover:text-black hover:bg-gray-100 transition duration-300">
+                    <div className="inline-flex items-center justify-center p-4 border rounded-lg shadow-lg button-style transition duration-300">
                       <FontAwesomeIcon
                         icon={faAddressCard}
                         className="text-3xl"

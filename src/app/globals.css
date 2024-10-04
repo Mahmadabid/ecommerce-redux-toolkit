@@ -20,6 +20,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.button-style {
+  background-color: #1b2e3c;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.button-style:hover {
+  background-color: #030507;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
