@@ -51,7 +51,6 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
 
   const handleDropdownToggle = () => {
     if (loggedOut) {
-
     } else {
       setShowDropdown(!showDropdown);
     }
@@ -65,7 +64,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
       >
         {
           <svg
-            className={`absolute w-12 h-12 ${loggedOut? 'text-black' : 'text-[#00aaff]'} -left-1 transition-transform transform hover:scale-110`}
+            className={`absolute w-12 h-12 ${
+              loggedOut ? "text-black" : "text-[#00aaff]"
+            } -left-1 transition-transform transform hover:scale-110`}
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -84,12 +85,24 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
           <div className="block w-full px-4 py-2 font-medium text-teal-500">
             {email}
           </div>
-          {/* <Link onClick={handleDropdownToggle} href="/profile">
-                        <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Profile</h1>
-                    </Link> */}
+          <Link onClick={handleDropdownToggle} href="/profile">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              Profile
+            </h1>
+          </Link>
+          <Link onClick={handleDropdownToggle} href="/store">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              Store
+            </h1>
+          </Link>
+          <Link onClick={handleDropdownToggle} href="/sell">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              Sell
+            </h1>
+          </Link>
           <button
             onClick={handleLogout}
-            className="block w-full text-left px-4 py-2 text-black font-medium hover:rounded-md hover:text-white hover:bg-teal-500"
+            className="block w-full text-left px-4 py-2 bg-sky-100 rounded text-black font-medium hover:rounded hover:text-white hover:bg-teal-500"
           >
             Logout
           </button>

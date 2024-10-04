@@ -8,14 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons/faCartShopping';
 // import { useCartContext } from '@/utils/CartContext';
 import Load from '../utils/Load';
+import { cartItems, User } from '../utils/bin';
 
-const User = {
-  user: {
-    email: 'asd@g.c'
-  },
-  userId: 'asd'
-}
-const cartItems = ['asd', 'asdas']
 const Header = () => {
   const [loggingOut, setLoggingOut] = useState(false);
   // const [User, _] = useContext(UserContext);
