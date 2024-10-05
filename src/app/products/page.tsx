@@ -1,7 +1,15 @@
+"use client";
+
 import Product from "@/components/products/Product";
 import { products } from "@/components/utils/bin";
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductDisplay = () => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  console.log(cartItems)
+  
   return (
     <div className="flex flex-wrap justify-center mt-8">
       {products.length > 0 ? (

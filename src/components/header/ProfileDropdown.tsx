@@ -63,40 +63,47 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
         className="relative w-10 h-10 overflow-hidden bg-sky-100 rounded-full cursor-pointer"
       >
         {
-          <svg
-            className={`absolute w-12 h-12 ${
-              loggedOut ? "text-black" : "text-[#00aaff]"
-            } -left-1 transition-transform transform hover:scale-110`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-              clipRule="evenodd"
-            ></path>
-          </svg>
+          <Link href="/login">
+            <svg
+              className={`absolute w-12 h-12 ${
+                loggedOut ? "text-black" : "text-[#00aaff]"
+              } -left-1 transition-transform transform hover:scale-110`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+          </Link>
         }
       </div>
 
       {showDropdown && (
-        <div className="absolute top-12 left-0 mt-2 bg-[#eafffb] border-gray-200 rounded shadow-lg z-10">
+        <div className="absolute top-12 left-0 mt-2 border-gray-200 rounded shadow-lg z-10">
           <div className="block w-full px-4 py-2 font-medium text-teal-500">
             {email}
           </div>
           <Link onClick={handleDropdownToggle} href="/profile">
-            <h1 className="block hover:bg-blue-500 font-medium hover:rounded hover:text-white px-4 py-2 text-gray-800">
+            <h1 className="block hover:bg-blue-500 font-medium border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
               Profile
             </h1>
           </Link>
+          <Link onClick={handleDropdownToggle} href="/products">
+            <h1 className="block hover:bg-blue-500 font-medium border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              Products
+            </h1>
+          </Link>
           <Link onClick={handleDropdownToggle} href="/store">
-            <h1 className="block hover:bg-blue-500 font-medium hover:rounded hover:text-white px-4 py-2 text-gray-800">
+            <h1 className="block hover:bg-blue-500 font-medium border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
               Store
             </h1>
           </Link>
           <Link onClick={handleDropdownToggle} href="/sell">
-            <h1 className="block hover:bg-blue-500 font-medium hover:rounded hover:text-white px-4 py-2 text-gray-800">
+            <h1 className="block hover:bg-blue-500 font-medium border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
               Sell
             </h1>
           </Link>

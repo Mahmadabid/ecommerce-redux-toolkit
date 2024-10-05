@@ -68,12 +68,12 @@ export default function Home() {
                   <p className="text-3xl xsm:text-2xl mb-2">
                     Login to view Profile
                   </p>
-                  <button
-                    onClick={() => {}}
-                    className="bg-blue-500 hover:bg-blue-700 font-bold text-white px-4 py-2 rounded mt-4"
+                  <Link
+                    href="/login"
+                    className="login-button mt-4"
                   >
                     Login
-                  </button>
+                  </Link>
                 </>
               )}
             </div>

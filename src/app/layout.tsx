@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/header/Header";
-import './globals.css'
+import "./globals.css";
+import ReduxProvider from "@/redux/reducer";
 
 export const metadata: Metadata = {
   title: "Pixel Ecommerce",
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
-        <div className="mb-6"></div>
+        <ReduxProvider>
+          <Header />
+          {children}
+          <div className="mb-6"></div>
+        </ReduxProvider>
       </body>
     </html>
   );

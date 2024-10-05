@@ -7,23 +7,26 @@ export const User = {
 
 export const cartItems = [
   {
-    name: "asdgffffffffffffffffff assssssssss",
+    id: 'ad123',
+    name: "asd",
     price: 10,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
     seller: "asdf",
     quantity: 3
   },
   {
+    id: 'ad123w',
     name: "afeg",
     price: 12,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
     seller: "sdsddf",
     quantity: 2
-  },
+  }
 ];
 
 export const products = [
   {
+    id: 'ad123',
     name: "asd",
     price: 10,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -31,6 +34,7 @@ export const products = [
     quantity: 3
   },
   {
+    id: 'ad123w',
     name: "afeg",
     price: 12,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -38,6 +42,7 @@ export const products = [
     quantity: 2
   },
   {
+    id: 'ad12s3',
     name: "asd",
     price: 10,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -45,6 +50,7 @@ export const products = [
     quantity: 3
   },
   {
+    id: 'ad123x',
     name: "afeg",
     price: 12,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -52,6 +58,7 @@ export const products = [
     quantity: 2
   },
   {
+    id: 'ad12v3',
     name: "asd",
     price: 10,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -59,6 +66,7 @@ export const products = [
     quantity: 3
   },
   {
+    id: 'ad12f3',
     name: "afeg",
     price: 12,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -66,6 +74,7 @@ export const products = [
     quantity: 2
   },
   {
+    id: 'ad12r3',
     name: "asd",
     price: 10,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
@@ -73,6 +82,7 @@ export const products = [
     quantity: 3
   },
   {
+    id: 'ad12y3',
     name: "afeg",
     price: 12,
     img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",

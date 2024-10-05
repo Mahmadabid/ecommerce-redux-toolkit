@@ -6,12 +6,6 @@ export interface FloatingLabelInputProps {
   type?: string;
 }
 
-export interface ShippingFormProps {
-  email: string;
-  handleBack: () => void;
-  handleNext: () => void;
-}
-
 export interface Step {
   label: string;
   completed: boolean;
@@ -20,4 +14,20 @@ export interface Step {
 export interface StepperProps {
   currentStep: number;
   steps: Step[];
+}
+
+export interface ShippingFormProps {
+  email: string;
+  handleBack: (e: React.FormEvent) => void;
+  handleNext: () => void;
+  fullName: string;
+  setFullName: React.Dispatch<React.SetStateAction<string>>;
+  shippingEmail: string;
+  setShippingEmail: React.Dispatch<React.SetStateAction<string>>;
+  address: string;
+  setAddress: React.Dispatch<React.SetStateAction<string>>;
+  city: string;
+  setCity: React.Dispatch<React.SetStateAction<string>>;
+  zipCode: string;
+  setZipCode: React.Dispatch<React.SetStateAction<string>>;
 }

@@ -8,15 +8,19 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   email,
   handleBack,
   handleNext,
+  fullName,
+  setFullName,
+  shippingEmail,
+  setShippingEmail,
+  address,
+  setAddress,
+  city,
+  setCity,
+  zipCode,
+  setZipCode,
 }) => {
-  const [fullName, setFullName] = useState("");
-  const [shipingEmail, setShipingEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [zipCode, setZipCode] = useState("");
-
   useEffect(() => {
-    setShipingEmail(email);
+    setShippingEmail(email);
   }, [email]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,7 +28,13 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
 
     handleNext();
     // If validation passes, handle form submission (e.g., API call)
-    console.log("Form submitted:", { fullName, address, city, zipCode });
+    console.log("Form submitted:", {
+      fullName,
+      shippingEmail,
+      address,
+      city,
+      zipCode,
+    });
   };
 
   return (
@@ -38,8 +48,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
       <FloatingLabelInput
         label="Email"
         required
-        value={shipingEmail}
-        onChange={setShipingEmail}
+        value={shippingEmail}
+        onChange={setShippingEmail}
         type="email"
       />
       <FloatingLabelInput

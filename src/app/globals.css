@@ -30,6 +30,22 @@ body {
   background-color: #030507;
 }
 
+.login-button {
+  background-color: #22492d;
+  color: white;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.login-button:hover {
+  background-color: #17311f;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -8,16 +8,23 @@ import { cartItems, User } from "@/components/utils/bin";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Checkout = () => {
   const [email, setEmail] = useState("");
+  const [check, setCheck] = useState(true);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [steps, setSteps] = useState<Step[]>([
     { label: "Contact Info", completed: false },
     { label: "Shipping", completed: false },
     { label: "Payment", completed: false },
   ]);
+
+  const [fullName, setFullName] = useState("");
+  const [shippingEmail, setShippingEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -35,7 +42,9 @@ const Checkout = () => {
     }
   };
 
-  const handleBack = () => {
+  const handleBack = (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
     }
@@ -45,6 +54,12 @@ const Checkout = () => {
     e.preventDefault();
 
     handleNext();
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log('submit')
   };
 
   return (
@@ -90,6 +105,7 @@ const Checkout = () => {
           {/* Stepper */}
           <Stepper currentStep={currentStep} steps={steps} />
           {/* Conditionally Render Each Step */}
+
           {/* Contact Information */}
           {currentStep === 0 && (
             <form onSubmit={handleContactSubmit}>
@@ -105,14 +121,9 @@ const Checkout = () => {
               />
               <div className="flex justify-center space-x-20 mt-3">
                 {User.userId ? (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                    }}
-                    className="bg-[#22492D] text-white hover:bg-[#17311f] font-semibold px-3 py-2 rounded"
-                  >
+                  <Link href="/login" className="login-button">
                     Login
-                  </button>
+                  </Link>
                 ) : null}
                 <button
                   type="submit"
@@ -130,7 +141,57 @@ const Checkout = () => {
               <h2 className="text-xl font-semibold my-6 text-h-color">
                 Shipping Information
               </h2>
-              <ShippingForm email={email} handleBack={handleBack} handleNext={handleNext} />
+              <ShippingForm
+                email={email}
+                handleBack={handleBack}
+                handleNext={handleNext}
+                fullName={fullName}
+                setFullName={setFullName}
+                shippingEmail={shippingEmail}
+                setShippingEmail={setShippingEmail}
+                address={address}
+                setAddress={setAddress}
+                city={city}
+                setCity={setCity}
+                zipCode={zipCode}
+                setZipCode={setZipCode}
+              />
+            </div>
+          )}
+          {/* Payment Information */}
+          {currentStep === 2 && (
+            <div>
+              <form onSubmit={handleFormSubmit}>
+                <h2 className="text-xl font-semibold my-6 text-h-color">
+                  Billing Information
+                </h2>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded transition cursor-pointer"
+                    defaultChecked={true}
+                    onChange={(e) => setCheck(e.target.checked)}
+                    required
+                  />
+                  <span className="text-gray-700">
+                    Cash on Delivery <span className="text-red-500">*</span>
+                  </span>
+                </label>
+                <div className="flex justify-between mt-8">
+                  <button
+                    onClick={handleBack}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-3 rounded"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="button-style font-semibold px-3 py-2 rounded"
+                  >
+                    Complete Purchase
+                  </button>
+                </div>
+              </form>
             </div>
           )}
         </>
