@@ -1,19 +1,20 @@
 "use client";
 
-import Link from 'next/link';
-import { useState, useContext } from 'react';
+import Link from "next/link";
+import { useState, useContext } from "react";
 // import { UserContext } from '@/utils/UserContext';
-import ProfileDropdown from './ProfileDropdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons/faCartShopping';
-// import { useCartContext } from '@/utils/CartContext';
-import Load from '../utils/Load';
-import { cartItems, User } from '../utils/bin';
+import ProfileDropdown from "./ProfileDropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons/faCartShopping";
+import Load from "../utils/Load";
+import { User } from "../utils/bin";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const Header = () => {
   const [loggingOut, setLoggingOut] = useState(false);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   // const [User, _] = useContext(UserContext);
-  // const { cartItems } = useCartContext();
 
   return (
     <header className="bg-b-color p-4 xse:p-[10px] z-50 text-white shadow-md relative flex justify-center items-center">
@@ -23,28 +24,39 @@ const Header = () => {
           style={{ zIndex: 1000 }}
         >
           <div className="text-white flex flex-row text-2xl font-bold">
-            Logging Out &nbsp;<Load className='w-9 h-9 fill-white' />
+            Logging Out &nbsp;
+            <Load className="w-9 h-9 fill-white" />
           </div>
         </div>
       )}
-      {User.userId ? <ProfileDropdown setLoggingOut={setLoggingOut} email={User.user.email} /> : <ProfileDropdown setLoggingOut={setLoggingOut} loggedOut={true} />}
+      {User.userId ? (
+        <ProfileDropdown
+          setLoggingOut={setLoggingOut}
+          email={User.user.email}
+        />
+      ) : (
+        <ProfileDropdown setLoggingOut={setLoggingOut} loggedOut={true} />
+      )}
       <h1 className="mx-auto text-4xl xse:text-3xl font-bold">
-        <Link href='/'>Pixel Market</Link>
+        <Link href="/">Pixel Market</Link>
       </h1>
-      <Link href='/cart'>
+      <Link href="/cart">
         <div className="relative">
           {cartItems.length > 0 && (
-            <div className="absolute -top-[6px] left-2 bg-[#b700ff] p-2 rounded-full w-4 h-4 justify-center items-center flex">
-              <p className='text-white font-medium m-1 mt-[5px]'>
-                {/* {cartItems.reduce((total, cart) => total + cart.quantity, 0)} */}
+            <div className="absolute top-[-6px] left-[10px] bg-[#1b7d03] rounded w-fit h-[18px] p-[2px] flex justify-center items-center">
+              <p className="text-white font-medium text-sm">
+                {cartItems.reduce((total, cart) => total + cart.quantity, 0)}
               </p>
             </div>
           )}
-          <FontAwesomeIcon icon={faCartShopping} className="text-[26px] mr-2 xse:mr-0 mt-1" />
+          <FontAwesomeIcon
+            icon={faCartShopping}
+            className="text-[26px] mr-2 xse:mr-0 mt-1"
+          />
         </div>
       </Link>
     </header>
-  )
+  );
 };
 
 export default Header;

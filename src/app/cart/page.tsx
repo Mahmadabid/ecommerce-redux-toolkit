@@ -1,22 +1,28 @@
 "use client";
 
-import { cartItems } from "@/components/utils/bin";
+import { addToCart, clearCart, removeFromCart } from "@/redux/slices/cart";
+import { AppDispatch, RootState } from "@/redux/store";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function CartPage() {
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const [cart, setCart] = useState(cartItems);
+  const dispatch: AppDispatch = useDispatch();
 
   // Function to handle quantity changes
   const handleQuantityChange = (index: number, delta: number) => {
     const updatedCart = cart.map((item, i) => {
       if (i === index) {
-        return {
+        const updatedItem = {
           ...item,
           quantity: Math.max(1, item.quantity + delta),
         };
+        dispatch(addToCart(updatedItem));
+        return updatedItem;
       }
       return item;
     });
@@ -24,9 +30,10 @@ export default function CartPage() {
   };
 
   // Function to remove an item
-  const handleRemove = (index: number) => {
+  const handleRemove = (index: number, id: string) => {
     const updatedCart = cart.filter((_, i) => i !== index);
     setCart(updatedCart);
+    dispatch(removeFromCart(id));
   };
 
   // Calculate item total
@@ -46,7 +53,7 @@ export default function CartPage() {
         Shopping Cart
       </h1>
       {cartItems.length > 0 ? (
-        // Cart Table 
+        // Cart Table
         <div className="w-full max-w-2xl mx-auto">
           <div className="grid grid-cols-6 gap-4 font-bold mb-4 text-lg xmd:hidden">
             <p></p>
@@ -100,6 +107,7 @@ export default function CartPage() {
                     <p className="text-lg">{item.quantity}</p>
                     <button
                       onClick={() => handleQuantityChange(index, 1)}
+                      disabled={item.quantity >= item.totalQuantity}
                       className="border border-gray-300 px-2 py-1 rounded-md"
                     >
                       +
@@ -117,7 +125,7 @@ export default function CartPage() {
               {/* Button to remove Item */}
               <div className="flex justify-center">
                 <button
-                  onClick={() => handleRemove(index)}
+                  onClick={() => handleRemove(index, item.id)}
                   className="bg-[#632B24] hover:bg-white max-w-24 hover:text-[#632B24] font-semibold text-white border hover:border-[#632B24] rounded p-[6px]"
                 >
                   Remove
@@ -125,7 +133,15 @@ export default function CartPage() {
               </div>
             </div>
           ))}
-
+          {/* Clear Cart */}
+          <div className="flex justify-center mt-5">
+            <button
+              onClick={() => dispatch(clearCart())}
+              className="bg-[#632B24] hover:bg-white max-w-24 hover:text-[#632B24] font-semibold text-white border hover:border-[#632B24] rounded p-[6px]"
+            >
+              Clear Cart
+            </button>
+          </div>
           {/* Order Summary */}
           <div className="mt-6 flex justify-between items-center">
             <p className="font-bold text-xl">Order Total:</p>
@@ -146,7 +162,10 @@ export default function CartPage() {
         // Cart is empty
         <div className="ustify-center flex items-center my-16 flex-col">
           <p className="text-xl font-semibold">Cart is empty</p>
-          <Link href="/products" className="px-4 mt-4 py-2 rounded-lg font-semibold button-style">
+          <Link
+            href="/products"
+            className="px-4 mt-4 py-2 rounded-lg font-semibold button-style"
+          >
             Shop now <FontAwesomeIcon icon={faShoppingCart} />
           </Link>
         </div>

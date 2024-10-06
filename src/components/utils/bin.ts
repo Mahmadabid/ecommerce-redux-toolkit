@@ -5,88 +5,37 @@ export const User = {
   userId: "asd",
 };
 
-export const cartItems = [
-  {
-    id: 'ad123',
-    name: "asd",
-    price: 10,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "asdf",
-    quantity: 3
-  },
-  {
-    id: 'ad123w',
-    name: "afeg",
-    price: 12,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "sdsddf",
-    quantity: 2
-  }
-];
-
 export const products = [
   {
-    id: 'ad123',
-    name: "asd",
+    id: '1',
+    name: "apple",
+    price: 1,
+    img: "https://images.everydayhealth.com/images/diet-nutrition/apples-101-about-1440x810.jpg",
+    seller: "fruit-vendor",
+    quantity: 1000
+  },
+  {
+    id: '2',
+    name: "mango",
+    price: 2,
+    img: "https://i0.wp.com/plant.pk/wp-content/uploads/2023/11/1000233211.jpg?fit=554%2C554&ssl=1",
+    seller: "fruit-vendor",
+    quantity: 800
+  },
+  {
+    id: '4',
+    name: "cake",
     price: 10,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "asdf",
-    quantity: 3
+    img: "https://openmenupk.s3.ap-south-1.amazonaws.com/wp-content/uploads/2024/07/19110131/cake.jpg",
+    seller: "bakery",
+    quantity: 100
   },
   {
-    id: 'ad123w',
-    name: "afeg",
-    price: 12,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "sdsddf",
-    quantity: 2
-  },
-  {
-    id: 'ad12s3',
-    name: "asd",
-    price: 10,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "asdf",
-    quantity: 3
-  },
-  {
-    id: 'ad123x',
-    name: "afeg",
-    price: 12,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "sdsddf",
-    quantity: 2
-  },
-  {
-    id: 'ad12v3',
-    name: "asd",
-    price: 10,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "asdf",
-    quantity: 3
-  },
-  {
-    id: 'ad12f3',
-    name: "afeg",
-    price: 12,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "sdsddf",
-    quantity: 2
-  },
-  {
-    id: 'ad12r3',
-    name: "asd",
-    price: 10,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "asdf",
-    quantity: 3
-  },
-  {
-    id: 'ad12y3',
-    name: "afeg",
-    price: 12,
-    img: "https://c7.alamy.com/comp/KMNCXM/astronaut-in-space-elements-of-this-iimage-furnished-by-nasa-KMNCXM.jpg",
-    seller: "sdsddf",
-    quantity: 2
+    id: '4',
+    name: "chocolate",
+    price: 4,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM1bjLuveRZ6g0nUu_L_XeaMdK3oiyDk_HwA&s",
+    seller: "bakery",
+    quantity: 400
   }
 ];

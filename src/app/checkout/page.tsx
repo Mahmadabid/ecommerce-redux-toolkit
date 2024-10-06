@@ -4,11 +4,13 @@ import FloatingLabelInput from "@/components/form/FloatingLabelInput";
 import ShippingForm from "@/components/form/ShippingForm";
 import Stepper from "@/components/form/Stepper";
 import { Step } from "@/components/form/type";
-import { cartItems, User } from "@/components/utils/bin";
+import { User } from "@/components/utils/bin";
+import { RootState } from "@/redux/store";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Checkout = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +27,8 @@ const Checkout = () => {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState("");
+
+  const cartItems = useSelector((state: RootState) => state.cart.items)
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -170,6 +174,7 @@ const Checkout = () => {
                     type="checkbox"
                     className="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded transition cursor-pointer"
                     defaultChecked={true}
+                    checked={check}
                     onChange={(e) => setCheck(e.target.checked)}
                     required
                   />
