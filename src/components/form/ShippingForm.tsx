@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import FloatingLabelInput from "./FloatingLabelInput";
 import { ShippingFormProps } from "./type";
 
@@ -18,6 +18,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   setCity,
   zipCode,
   setZipCode,
+  country,
+  setCountry
 }) => {
   useEffect(() => {
     setShippingEmail(email);
@@ -63,6 +65,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         required
         value={city}
         onChange={setCity}
+      />
+      <FloatingLabelInput
+        label="Country"
+        required
+        value={country}
+        onChange={setCountry}
       />
       <FloatingLabelInput
         label="Zip Code"

@@ -1,5 +1,6 @@
 "use client";
 
+import { clearCart } from "@/redux/slices/cart";
 // import { useCartContext } from '@/utils/CartContext';
 // import { signOut } from 'next-auth/react';
 import Link from "next/link";
@@ -10,6 +11,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useDispatch } from "react-redux";
 
 interface ProfileDropdownProps {
   setLoggingOut: Dispatch<SetStateAction<boolean>>;
@@ -24,7 +26,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  // const { clearCart } = useCartContext();
+  const dispath = useDispatch();
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -46,6 +48,8 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
   const handleLogout = () => {
     setLoggingOut(true);
     sessionStorage.clear();
+    localStorage.clear();
+    dispath(clearCart());
     window.location.reload();
   };
 

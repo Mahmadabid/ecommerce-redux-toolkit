@@ -4,17 +4,6 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   const client = await pool.connect();
   try {
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS products_table (
-        id SERIAL PRIMARY KEY,
-        name STRING NOT NULL,
-        price DECIMAL(10, 2) NOT NULL,
-        img STRING NOT NULL,
-        seller STRING NOT NULL,
-        quantity INT NOT NULL DEFAULT 0
-      );
-    `);
-
     const { searchParams } = new URL(req.url);
     const seller = searchParams.get("seller");
 

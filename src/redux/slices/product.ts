@@ -1,22 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  seller: string;
-  img: string;
-}
+import { ProductProps } from './types';
 
 export const productApi = createApi({
   reducerPath: 'productApi',
   baseQuery: fetchBaseQuery({baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}`}),
   endpoints: (builder) => ({
-    getProducts: builder.query<Product[], void>({
+    getProducts: builder.query<ProductProps[], void>({
       query: () => 'products'
     }),
-    getProductsBySeller: builder.query<Product[], string>({
+    getProductsBySeller: builder.query<ProductProps[], string>({
       query: (seller) => `products?seller=${seller}`,
     }),
   }),

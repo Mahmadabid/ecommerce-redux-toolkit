@@ -1,20 +1,16 @@
-// For client side dynamic pages, using redux toolkit query
-
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useGetProductsBySellerQuery } from "@/redux/slices/product";
-import Product from "@/components/products/Product";
 import { useState } from "react";
-import PageLoad from "@/components/utils/pageLoad";
-import PageError from "@/components/utils/pageError";
+import Product from "@/components/products/Product";
 import Link from "next/link";
+import { ProductProps } from "@/redux/slices/types";
 
-const SellerPage = () => {
-  const searchParams = useSearchParams();
+interface SellerPageClientProps {
+  seller: string;
+  products: ProductProps[];
+}
 
-  const seller = searchParams.get("seller") || "";
-
+const SellerPageClient = ({ seller, products }: SellerPageClientProps) => {
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
@@ -22,11 +18,6 @@ const SellerPage = () => {
     message: "",
     visible: false,
   });
-  const {
-    data: products = [],
-    error,
-    isLoading,
-  } = useGetProductsBySellerQuery(seller);
 
   const handleAddToCart = (itemName: string) => {
     setNotification({ message: `${itemName} added to cart!`, visible: true });
@@ -34,9 +25,6 @@ const SellerPage = () => {
       setNotification({ message: "", visible: false });
     }, 3500);
   };
-
-  if (isLoading) return <PageLoad />;
-  if (error) return <PageError />;
 
   return (
     <div className="text-center">
@@ -72,4 +60,4 @@ const SellerPage = () => {
   );
 };
 
-export default SellerPage;
+export default SellerPageClient;

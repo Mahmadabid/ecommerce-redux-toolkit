@@ -26,9 +26,10 @@ const Checkout = () => {
   const [shippingEmail, setShippingEmail] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
   const [zipCode, setZipCode] = useState("");
 
-  const cartItems = useSelector((state: RootState) => state.cart.items)
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -63,7 +64,7 @@ const Checkout = () => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('submit')
+    console.log("submit");
   };
 
   return (
@@ -159,6 +160,8 @@ const Checkout = () => {
                 setCity={setCity}
                 zipCode={zipCode}
                 setZipCode={setZipCode}
+                country={country}
+                setCountry={setCountry}
               />
             </div>
           )}

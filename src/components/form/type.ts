@@ -28,6 +28,8 @@ export interface ShippingFormProps {
   setAddress: React.Dispatch<React.SetStateAction<string>>;
   city: string;
   setCity: React.Dispatch<React.SetStateAction<string>>;
+  country: string;
+  setCountry: React.Dispatch<React.SetStateAction<string>>;
   zipCode: string;
   setZipCode: React.Dispatch<React.SetStateAction<string>>;
 }

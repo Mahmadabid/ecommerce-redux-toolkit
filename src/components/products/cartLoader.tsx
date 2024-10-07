@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addToCart, CartItem } from '@/redux/slices/cart';
+import { addToCart } from '@/redux/slices/cart';
+import { CartItem } from '@/redux/slices/types';
 
 const loadCartItems = (): CartItem[] => {
   if (typeof window !== 'undefined') {

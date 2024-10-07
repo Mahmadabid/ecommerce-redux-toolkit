@@ -13,7 +13,6 @@ export default function CartPage() {
   const [cart, setCart] = useState(cartItems);
   const dispatch: AppDispatch = useDispatch();
 
-  // Function to handle quantity changes
   const handleQuantityChange = (index: number, delta: number) => {
     const updatedCart = cart.map((item, i) => {
       if (i === index) {
@@ -29,19 +28,16 @@ export default function CartPage() {
     setCart(updatedCart);
   };
 
-  // Function to remove an item
   const handleRemove = (index: number, id: string) => {
     const updatedCart = cart.filter((_, i) => i !== index);
     setCart(updatedCart);
     dispatch(removeFromCart(id));
   };
 
-  // Calculate item total
   const calculateTotal = (price: number, qty: number) => {
     return (price * qty).toFixed(2);
   };
 
-  // Calculate grand total
   const grandTotal = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
