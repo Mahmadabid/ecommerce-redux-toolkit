@@ -1,3 +1,5 @@
+import { Role } from "@/components/utils/utils";
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -14,15 +16,8 @@ export interface RegisterRequest {
   password: string;
 }
 
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: string;
-}
-
 export type AuthState = {
-  user: User | null;
+  user: UserProps | null;
   token: string | null;
 };
 
@@ -63,3 +58,16 @@ export interface CartItem {
 export interface CartState {
   items: CartItem[];
 }
+
+export type UserProps = {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+  role: Role;
+  name: string;
+  city: string;
+  zipcode: string;
+  address: string;
+  country: string;
+};

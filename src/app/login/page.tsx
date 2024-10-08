@@ -1,12 +1,19 @@
 "use client";
 
 import FloatingLabelInput from "@/components/form/FloatingLabelInput";
+import Notification from "@/components/products/Notification";
+import Load from "@/components/utils/Load";
+import PageError from "@/components/utils/pageError";
+import PageLoad from "@/components/utils/pageLoad";
+import { Role } from "@/components/utils/utils";
+import { UserProps } from "@/redux/slices/types";
+import {
+  useAddUserMutation,
+  useFetchCredentialsQuery,
+  useLoginUserMutation,
+} from "@/redux/slices/user";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-enum Role {
-  buyer = "buyer",
-  seller = "seller",
-}
 
 const Login = () => {
   const [isLogIn, setIsLogIn] = useState(true);
@@ -15,33 +22,92 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{
+    message: string;
+    visible: boolean;
+  }>({
+    message: "Added user, Please Login",
+    visible: false,
+  });
+  const router = useRouter();
 
-  const users = [
-    { userName: "asd", email: "asd@g.c" },
-    { userName: "asdf", email: "asdf@g.c" },
-  ];
+  const handleAddUser = () => {
+    setNotification({ message: `Added user, Please Login`, visible: true });
+    setTimeout(() => {
+      setNotification({ message: "Added user, Please Login", visible: false });
+    }, 5000);
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const {
+    data: users = [],
+    error: errorUsers = "",
+    isLoading,
+    refetch,
+  } = useFetchCredentialsQuery({});
+
+  const [addUser, { error: addUserError = "", isLoading: addUserLoading }] =
+    useAddUserMutation();
+
+  const [
+    logInUser,
+    { error: logInUserError = "", isLoading: logInUserLoading },
+  ] = useLoginUserMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     if (isLogIn) {
-      const userExists = users.some((user) => user.email === email);
-      if (!userExists) {
-        setError("Email not found. Please sign up.");
-      } else {
-        console.log("Login successful");
+      try {
+        const userExists = users.some(
+          (user: UserProps) => user.email === email
+        );
+        if (!userExists) {
+          setError("Email not found. Please sign up.");
+        } else {
+          const data = await logInUser({ email, password }).unwrap();
+          if (!logInUserError) {
+            localStorage.setItem("token", data.token);
+            console.log("Login successful");
+            router.push('/profile')
+          }
+        }
+      } catch (err) {console.log(err)
+        setError("Login failed. Please check your credentials.");
       }
     } else {
-      const emailExists = users.some((user) => user.email === email);
-      const userNameExists = users.some((user) => user.userName === userName);
+      try {
+        const emailExists = users.some(
+          (user: UserProps) => user.email === email
+        );
+        const userNameExists = users.some(
+          (user: UserProps) => user.username === userName
+        );
 
-      if (emailExists) {
-        setError("Email is already registered. Please use another.");
-      } else if (userNameExists) {
-        setError("Username is already taken. Please choose another.");
-      } else {
-        console.log("Sign-up successful");
+        if (emailExists) {
+          setError("Email is already registered. Please use another.");
+        } else if (userNameExists) {
+          setError("Username is already taken. Please choose another.");
+        } else {
+          await addUser({
+            username: userName,
+            email,
+            password,
+            role,
+            name: "",
+            city: "",
+            zipcode: "",
+            address: "",
+            country: "",
+          });
+          if (!addUserError) {
+            await refetch();
+            handleAddUser();
+            handleChange();
+          }
+        }
+      } catch (err) {
+        setError("Sign-up failed. Please try again.");
       }
     }
   };
@@ -52,6 +118,9 @@ const Login = () => {
     setError(null);
   };
 
+  if (isLoading) return <PageLoad />;
+  if (errorUsers) return <PageError />;
+
   return (
     <div className="text-center mt-8 max-w-lg mx-auto p-4">
       <form onSubmit={handleSubmit}>
@@ -59,6 +128,25 @@ const Login = () => {
           {isLogIn ? "Login" : "SignUp"}
         </h1>
         {error && <p className="text-red-500 my-2">{error}</p>}
+        {(addUserError || logInUserError) && (
+          <p className="text-red-500 my-2">
+            {addUserError
+              ? "data" in addUserError &&
+                typeof addUserError.data === "object" &&
+                addUserError.data !== null
+                ? (addUserError.data as { message: string }).message ||
+                  "Error occurred while adding user"
+                : "Error occurred while adding user"
+              : logInUserError
+              ? "data" in logInUserError &&
+                typeof logInUserError.data === "object" &&
+                logInUserError.data !== null
+                ? (logInUserError.data as { message: string }).message ||
+                  "Error occurred while logging in"
+                : "Error occurred while logging in"
+              : "An unknown error occurred."}
+          </p>
+        )}
         <FloatingLabelInput
           label="Email"
           required
@@ -105,20 +193,31 @@ const Login = () => {
         )}
         <button
           type="submit"
+          disabled={addUserLoading || logInUserLoading}
           className="py-2 px-3 mt-3 rounded-lg font-semibold button-style"
         >
-          {isLogIn ? "Login" : "SignUp"}
+          {addUserLoading || logInUserLoading ? (
+            <Load />
+          ) : isLogIn ? (
+            "Login"
+          ) : (
+            "Signup"
+          )}
         </button>
       </form>
       <h2 className="mt-8 mb-4 font-semibold">
-        {isLogIn ? "Don't have an Account? SignUp" : "Already have an Account? Login"}
+        {isLogIn
+          ? "Don't have an Account? SignUp"
+          : "Already have an Account? Login"}
       </h2>
       <button
         onClick={handleChange}
-        className="px-6 py-4 rounded-lg font-semibold login-button"
+        className="px-6 py-4 rounded-lg font-semibold login-button disabled:bg-gray-600 disabled:hover:bg-gray-700"
+        disabled={addUserLoading || logInUserLoading}
       >
-        {isLogIn ? "SignUp" : "Login"}
+        {isLogIn ? "Signup" : "Login"}
       </button>
+      <Notification {...notification} />
     </div>
   );
 };

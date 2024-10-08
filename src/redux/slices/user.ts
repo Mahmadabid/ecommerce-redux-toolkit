@@ -1,15 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { createSlice } from "@reduxjs/toolkit/react";
-import { AuthState, LoginRequest, LogOutResponse, UserResponse } from "./types";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
-    fetchUsers: builder.query({
-      query: () => "/users",
+    fetchCredentials: builder.query({
+      query: () => "/fetchcredentials",
     }),
     addUser: builder.mutation({
       query: ({
@@ -24,7 +29,7 @@ export const usersApi = createApi({
         address,
         country,
       }) => ({
-        url: "/users",
+        url: "/auth/addUser",
         method: "POST",
         body: {
           username,
@@ -40,78 +45,20 @@ export const usersApi = createApi({
         },
       }),
     }),
-    login: builder.mutation<UserResponse, LoginRequest>({
-        query: (credentials) => ({
-          url: "auth/login",
-          method: "POST",
-          body: credentials,
-        }),
+    loginUser: builder.mutation({
+      query: ({ email, password }) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: {
+          email,
+          password,
+        },
       }),
-      logout: builder.mutation<LogOutResponse, void>({
-        query: () => ({
-          url: "auth/logout",
-          method: "POST",
-          validateStatus(response) {
-            return response.ok === true;
-          },
-        }),
-      }),
+    }),
   }),
 });
 
-export const authSlice = createSlice({
-  name: "auth",
-  initialState: {
-    user: null,
-    token: null,
-  } as AuthState,
-  reducers: {
-    refreshAuthentication: (state) => {
-      const isAuthenticated = localStorage.getItem("isAuthenticated");
-      if (isAuthenticated === "true") {
-        const userSession = localStorage.getItem("user");
-        const response: UserResponse = JSON.parse(
-          userSession as string
-        ) as UserResponse;
-        state.token = response.token;
-        state.user = {
-          username: response.username,
-          id: response.userId,
-          email: response.email,
-          role: response.role,
-        };
-      }
-      return state;
-    },
-  },
-  extraReducers(builder) {
-    builder.addMatcher(
-      usersApi.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        state.token = payload.token;
-        state.user = {
-          id: payload.userId,
-          username: payload.username,
-          email: payload.email,
-          role: payload.role,
-        };
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("user", `${JSON.stringify(payload)}`);
-        return state;
-      }
-    );
-    builder.addMatcher(usersApi.endpoints.logout.matchFulfilled, (state) => {
-      state.token = null;
-      state.user = null;
-      localStorage.removeItem("isAuthenticated");
-      localStorage.removeItem("user");
-      return state;
-    });
-  },
-});
-
-export const { useFetchUsersQuery, useAddUserMutation } = usersApi;
-export const { refreshAuthentication } = authSlice.actions;
+export const { useFetchCredentialsQuery, useAddUserMutation, useLoginUserMutation } = usersApi;
 
 const usersReducer = usersApi.reducer;
 export default usersReducer;
