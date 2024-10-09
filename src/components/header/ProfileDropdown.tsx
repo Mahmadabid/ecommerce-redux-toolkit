@@ -117,11 +117,6 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
               Store
             </h1>
           </Link>
-          <Link onClick={handleDropdownToggle} href="/sell">
-            <h1 className="block hover:bg-blue-500 font-medium border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
-              Sell
-            </h1>
-          </Link>
           <button
             onClick={handleLogout}
             className="block w-full text-left px-4 py-2 bg-sky-100 rounded text-black font-medium hover:rounded hover:text-white hover:bg-teal-500"

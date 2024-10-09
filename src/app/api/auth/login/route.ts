@@ -2,6 +2,7 @@ import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UserProps } from "@/redux/slices/types";
 
 export async function POST(request: Request) {
   const client = await pool.connect();
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = userResult.rows[0];
+    const user: UserProps = userResult.rows[0];
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -42,13 +43,31 @@ export async function POST(request: Request) {
         username: user.username,
         email: user.email,
         role: user.role,
+        name: user.name,
+        address: user.address,
+        city: user.city,
+        country: user.country,
+        zipcode: user.zipcode,
+        ok: true
       },
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
 
     return NextResponse.json(
-      { id: user.id, username: user.username, email: user.email, role: user.role, token },
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        token,
+        name: user.name,
+        address: user.address,
+        city: user.city,
+        country: user.country,
+        zipcode: user.zipcode,
+        ok: true
+      },
       { status: 200 }
     );
   } catch (error) {

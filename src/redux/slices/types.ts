@@ -17,18 +17,23 @@ export interface RegisterRequest {
 }
 
 export type AuthState = {
-  user: UserProps | null;
+  user: UserType | null;
   token: string | null;
 };
 
 export interface UserResponse {
   token: string;
   username: string;
-  userId: number;
+  id: string;
   email: string;
-  role: string;
+  role: Role;
   status: number;
   ok: boolean;
+  name: string;
+  city: string;
+  zipcode: string;
+  address: string;
+  country: string;
 }
 
 export interface LogOutResponse {
@@ -59,15 +64,19 @@ export interface CartState {
   items: CartItem[];
 }
 
-export type UserProps = {
+export type UserType = {
   id: string;
   username: string;
   email: string;
-  password: string;
   role: Role;
   name: string;
   city: string;
   zipcode: string;
   address: string;
   country: string;
+  ok?: boolean;
 };
+
+export interface UserProps extends UserType {
+  password: string;
+}

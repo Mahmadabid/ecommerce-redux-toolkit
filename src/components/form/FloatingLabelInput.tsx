@@ -8,7 +8,9 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
   required,
   value,
   onChange,
-  type
+  type,
+  classname,
+  isDisabled,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputId = label.replace(/\s+/g, "-").toLowerCase();
@@ -24,11 +26,12 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
   };
 
   return (
-    <div className="relative mb-4">
+    <div className={`relative mb-4 ${classname}`}>
       <input
         id={inputId}
-        type={type? type: "text"}
+        type={type ? type : "text"}
         value={value}
+        disabled={isDisabled}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={(e) => onChange(e.target.value)}
@@ -41,7 +44,9 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
         htmlFor={inputId}
         className={`absolute cursor-text left-3 transition-all duration-[250ms] transform ${
           isFocused || value
-            ? "-translate-y-2 z-10 scale-90 text-xs text-blue-500"
+            ? `-translate-y-2 z-10 scale-90 text-xs ${
+                isDisabled ? "text-gray-400" : "text-blue-500"
+              }`
             : "top-[10px] scale-100 text-sm text-gray-500"
         }`}
       >
@@ -56,7 +61,7 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
       </label>
       <fieldset
         className={`absolute inset-0 border-2 rounded-md transition-all duration-[250ms] pointer-events-none ${
-          isFocused || value ? "border-blue-500 out" : "border-gray-400"
+          !isDisabled? isFocused || value ? "border-blue-500 out" : "border-gray-400": "border-gray-400"
         }`}
       />
     </div>

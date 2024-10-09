@@ -4,6 +4,8 @@ export interface FloatingLabelInputProps {
   value: string;
   onChange: (value: string) => void;
   type?: string;
+  classname?: string;
+  isDisabled?: boolean;
 }
 
 export interface Step {

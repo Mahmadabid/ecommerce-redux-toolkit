@@ -1,13 +1,6 @@
 import { Role } from "./utils";
 import { UserProps } from "@/redux/slices/types";
 
-export const User = {
-  user: {
-    email: "asd@g.c",
-  },
-  userId: "asd",
-};
-
 export const products = [
   {
     id: '1',

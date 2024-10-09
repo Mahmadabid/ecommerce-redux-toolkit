@@ -1,20 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useContext } from "react";
-// import { UserContext } from '@/utils/UserContext';
+import { useEffect, useState } from "react";
 import ProfileDropdown from "./ProfileDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons/faCartShopping";
 import Load from "../utils/Load";
-import { User } from "../utils/bin";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { refreshAuthentication } from "@/redux/slices/user";
 
 const Header = () => {
   const [loggingOut, setLoggingOut] = useState(false);
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  // const [User, _] = useContext(UserContext);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(refreshAuthentication());
+  }, [dispatch]);
 
   return (
     <header className="bg-b-color p-4 xse:p-[10px] z-50 text-white shadow-md relative flex justify-center items-center">
@@ -29,10 +33,10 @@ const Header = () => {
           </div>
         </div>
       )}
-      {User.userId ? (
+      {user?.ok ? (
         <ProfileDropdown
           setLoggingOut={setLoggingOut}
-          email={User.user.email}
+          email={user?.email}
         />
       ) : (
         <ProfileDropdown setLoggingOut={setLoggingOut} loggedOut={true} />

@@ -8,12 +8,15 @@ import PageLoad from "@/components/utils/pageLoad";
 import { Role } from "@/components/utils/utils";
 import { UserProps } from "@/redux/slices/types";
 import {
+  refreshAuthentication,
   useAddUserMutation,
   useFetchCredentialsQuery,
   useLoginUserMutation,
 } from "@/redux/slices/user";
+import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
   const [isLogIn, setIsLogIn] = useState(true);
@@ -22,6 +25,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state: RootState) => state.auth);
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
@@ -31,6 +37,16 @@ const Login = () => {
   });
   const router = useRouter();
 
+  useEffect(() => {
+    dispatch(refreshAuthentication());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user?.ok) {
+      router.push("/profile");
+    }
+  }, [user]);
+
   const handleAddUser = () => {
     setNotification({ message: `Added user, Please Login`, visible: true });
     setTimeout(() => {
@@ -39,7 +55,6 @@ const Login = () => {
   };
 
   const {
-    data: users = [],
     error: errorUsers = "",
     isLoading,
     refetch,
@@ -57,9 +72,17 @@ const Login = () => {
     e.preventDefault();
     setError(null);
 
+    const { data: refetchedUsers = [], error: refetchError } =
+    await refetch();
+
+    if (refetchError) {
+      setError("Failed to fetch users. Please try again.");
+      return;
+    }
+
     if (isLogIn) {
       try {
-        const userExists = users.some(
+        const userExists = refetchedUsers.some(
           (user: UserProps) => user.email === email
         );
         if (!userExists) {
@@ -68,19 +91,19 @@ const Login = () => {
           const data = await logInUser({ email, password }).unwrap();
           if (!logInUserError) {
             localStorage.setItem("token", data.token);
-            console.log("Login successful");
-            router.push('/profile')
+            router.push('/profile');
           }
         }
-      } catch (err) {console.log(err)
+      } catch (err) {
+        console.log(err);
         setError("Login failed. Please check your credentials.");
       }
     } else {
       try {
-        const emailExists = users.some(
+        const emailExists = refetchedUsers.some(
           (user: UserProps) => user.email === email
         );
-        const userNameExists = users.some(
+        const userNameExists = refetchedUsers.some(
           (user: UserProps) => user.username === userName
         );
 

@@ -1,4 +1,6 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { AuthState, UserResponse } from "./types";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
@@ -62,3 +64,64 @@ export const { useFetchCredentialsQuery, useAddUserMutation, useLoginUserMutatio
 
 const usersReducer = usersApi.reducer;
 export default usersReducer;
+
+export const authSlice = createSlice({
+  name: "auth",
+  initialState: {
+    user: null,
+    token: null,
+  } as AuthState,
+  reducers: {
+    refreshAuthentication: (state) => {
+        const userSession = localStorage.getItem("user");
+        const response: UserResponse = JSON.parse(
+          userSession as string
+        ) as UserResponse;
+        state.token = response.token;
+        state.user = {
+          username: response.username,
+          id: response.id,
+          email: response.email,
+          role: response.role,
+          name: response.name,
+          city: response.city,
+          country: response.country,
+          zipcode: response.zipcode,
+          address: response.address,
+          ok: response.ok
+        };
+      return state;
+    },
+  },
+  extraReducers(builder) {
+    builder.addMatcher(
+      usersApi.endpoints.loginUser.matchFulfilled,
+      (state, { payload }) => {
+        state.token = payload.token;
+        state.user = {
+          id: payload.id,
+          username: payload.username,
+          email: payload.email,
+          role: payload.role,
+          name: payload.name,
+          city: payload.city,
+          country: payload.country,
+          zipcode: payload.zipcode,
+          address: payload.address,
+          ok: payload.ok
+        };
+        localStorage.setItem("user", `${JSON.stringify(payload)}`);
+        return state;
+      }
+    );
+    // builder.addMatcher(usersApi.endpoints.logout.matchFulfilled, (state) => {
+    //   state.token = null;
+    //   state.user = null;
+    //   sessionStorage.removeItem("isAuthenticated");
+    //   sessionStorage.removeItem("user");
+    //   return state;
+    // });
+  },
+});
+
+export const { refreshAuthentication } = authSlice.actions;
