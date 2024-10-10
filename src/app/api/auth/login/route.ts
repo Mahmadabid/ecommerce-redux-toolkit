@@ -37,6 +37,14 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT Secret is not defined");
+      return NextResponse.json(
+        { error: "Internal server error" },
+        { status: 500 }
+      );
+    }
+
     const token = jwt.sign(
       {
         id: user.id,
@@ -51,7 +59,7 @@ export async function POST(request: Request) {
         ok: true
       },
       process.env.JWT_SECRET as string,
-      { expiresIn: "1h" }
+      { expiresIn: "3d" }
     );
 
     return NextResponse.json(

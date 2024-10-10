@@ -57,10 +57,44 @@ export const usersApi = createApi({
         },
       }),
     }),
+    updateUser: builder.mutation({
+      query: ({
+        id,
+        email,
+        password,
+        username,
+        zipcode,
+        country,
+        city,
+        role,
+        name,
+        address,
+      }) => ({
+        url: "/auth/updateUser",
+        method: "POST",
+        body: {
+          id,
+          email,
+          password,
+          username,
+          zipcode,
+          country,
+          city,
+          role,
+          name,
+          address,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useFetchCredentialsQuery, useAddUserMutation, useLoginUserMutation } = usersApi;
+export const {
+  useFetchCredentialsQuery,
+  useAddUserMutation,
+  useLoginUserMutation,
+  useUpdateUserMutation,
+} = usersApi;
 
 const usersReducer = usersApi.reducer;
 export default usersReducer;
@@ -73,7 +107,8 @@ export const authSlice = createSlice({
   } as AuthState,
   reducers: {
     refreshAuthentication: (state) => {
-        const userSession = localStorage.getItem("user");
+      const userSession = localStorage.getItem("user");
+      if (userSession) {
         const response: UserResponse = JSON.parse(
           userSession as string
         ) as UserResponse;
@@ -88,8 +123,9 @@ export const authSlice = createSlice({
           country: response.country,
           zipcode: response.zipcode,
           address: response.address,
-          ok: response.ok
+          ok: response.ok,
         };
+      }
       return state;
     },
   },
@@ -108,7 +144,27 @@ export const authSlice = createSlice({
           country: payload.country,
           zipcode: payload.zipcode,
           address: payload.address,
-          ok: payload.ok
+          ok: payload.ok,
+        };
+        localStorage.setItem("user", `${JSON.stringify(payload)}`);
+        return state;
+      }
+    );
+    builder.addMatcher(
+      usersApi.endpoints.updateUser.matchFulfilled,
+      (state, { payload }) => {
+        state.token = payload.token;
+        state.user = {
+          id: payload.id,
+          username: payload.username,
+          email: payload.email,
+          role: payload.role,
+          name: payload.name,
+          city: payload.city,
+          country: payload.country,
+          zipcode: payload.zipcode,
+          address: payload.address,
+          ok: payload.ok,
         };
         localStorage.setItem("user", `${JSON.stringify(payload)}`);
         return state;

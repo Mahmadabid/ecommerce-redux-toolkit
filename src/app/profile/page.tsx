@@ -2,6 +2,7 @@
 
 import FloatingLabelInput from "@/components/form/FloatingLabelInput";
 import Notification from "@/components/products/Notification";
+import Load from "@/components/utils/Load";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
 import { Role } from "@/components/utils/utils";
@@ -9,6 +10,7 @@ import { UserProps } from "@/redux/slices/types";
 import {
   refreshAuthentication,
   useFetchCredentialsQuery,
+  useUpdateUserMutation,
 } from "@/redux/slices/user";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
@@ -30,6 +32,7 @@ const Profile = () => {
   const [country, setCountry] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [password, setPassword] = useState("");
+  const [id, setId] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<{
@@ -69,8 +72,14 @@ const Profile = () => {
       setCountry(user.country);
       setZipcode(user.zipcode);
       setRole(user.role);
+      setId(user.id)
     }
   }, [user]);
+
+  const [
+    updateUser,
+    { error: updateUserError = "", isLoading: updateUserLoading },
+  ] = useUpdateUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,18 +90,18 @@ const Profile = () => {
       setError("Failed to fetch users. Please try again.");
       return;
     }
-  
+
     const userNameExists = refetchedUsers.some(
       (user: UserProps) => user.username === username
     );
-  
+
     if (userNameExists) {
       setError("Username is already taken. Please choose another.");
       return;
     }
 
-    handleAddUser();
-    console.log({
+    await updateUser({
+      id,
       email,
       username,
       name,
@@ -103,6 +112,10 @@ const Profile = () => {
       password,
       role,
     });
+
+    if (!updateUserError) {
+      handleAddUser();
+    }
   };
 
   if (isLoading) return <PageLoad />;
@@ -113,6 +126,17 @@ const Profile = () => {
       <h1 className="text-4xl my-4 font-bold text-h-color">Profile</h1>
       <form onSubmit={handleSubmit}>
         {error && <p className="text-red-500 my-2">{error}</p>}
+        <p className="text-red-500 my-2">
+          {updateUserError
+            ? "data" in updateUserError &&
+              typeof updateUserError.data === "object" &&
+              updateUserError.data !== null
+              ? (updateUserError.data as { message: string }).message ||
+                "Error occurred while updating profile"
+              : "Error occurred while updating profile"
+            : null}
+        </p>
+
         <div className="grid grid-cols-1 fsm:grid-cols-2 mt-6 mx-auto gap-4 gap-x-16">
           <FloatingLabelInput
             classname="max-w-md"
@@ -184,9 +208,10 @@ const Profile = () => {
         </div>
         <button
           type="submit"
-          className="py-2 px-3 w-fit mt-3 rounded-lg font-semibold button-style col-span-2"
+          className="py-2 px-3 w-fit mt-3 rounded-lg font-semibold button-style col-span-2 disabled:bg-gray-600"
+          disabled={updateUserLoading}
         >
-          Update Profile
+          {updateUserLoading ? <Load /> : "Update Profile"}
         </button>
       </form>
       <Notification {...notification} />

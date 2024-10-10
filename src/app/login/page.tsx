@@ -217,7 +217,7 @@ const Login = () => {
         <button
           type="submit"
           disabled={addUserLoading || logInUserLoading}
-          className="py-2 px-3 mt-3 rounded-lg font-semibold button-style"
+          className="py-2 px-3 mt-3 rounded-lg font-semibold button-style disabled:bg-gray-600"
         >
           {addUserLoading || logInUserLoading ? (
             <Load />
