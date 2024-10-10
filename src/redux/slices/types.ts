@@ -80,3 +80,9 @@ export type UserType = {
 export interface UserProps extends UserType {
   password: string;
 }
+
+export interface UserFetch {
+  id: string;
+  username: string;
+  email: string;
+}

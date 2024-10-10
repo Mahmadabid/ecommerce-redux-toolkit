@@ -49,14 +49,7 @@ export async function POST(request: Request) {
       {
         id: user.id,
         username: user.username,
-        email: user.email,
-        role: user.role,
-        name: user.name,
-        address: user.address,
-        city: user.city,
-        country: user.country,
-        zipcode: user.zipcode,
-        ok: true
+        email: user.email
       },
       process.env.JWT_SECRET as string,
       { expiresIn: "3d" }

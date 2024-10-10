@@ -86,6 +86,16 @@ export const usersApi = createApi({
         },
       }),
     }),
+    deleteUser: builder.mutation({
+      query: ({ id, adminId }) => ({
+        url: "/auth/deleteUser",
+        method: "DELETE",
+        body: {
+          id,
+          adminId
+        },
+      }),
+    }),
   }),
 });
 
@@ -94,6 +104,7 @@ export const {
   useAddUserMutation,
   useLoginUserMutation,
   useUpdateUserMutation,
+  useDeleteUserMutation
 } = usersApi;
 
 const usersReducer = usersApi.reducer;

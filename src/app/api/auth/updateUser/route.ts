@@ -21,9 +21,8 @@ export async function POST(request: Request) {
       );
     }
 
-    let decodedToken;
     try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
+      jwt.verify(token, process.env.JWT_SECRET as string);
     } catch (error) {
       return NextResponse.json(
         { error: "Invalid or expired token" },
@@ -43,7 +42,7 @@ export async function POST(request: Request) {
       address,
       country,
     } = await request.json();
-    if (!id || !email || !username)
+    if (!id || !email)
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -57,16 +56,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     const existingUser = existingUserQuery.rows[0];
-    console.log(existingUser);
-    const usernameExists = await client.query(
-      "SELECT * FROM users_table WHERE username = $1 AND id != $2",
-      [username, id]
-    );
-    if (usernameExists.rows.length > 0)
-      return NextResponse.json(
-        { error: "Username is already taken" },
-        { status: 409 }
+
+    if (username && username !== existingUser.username) {
+      const usernameExists = await client.query(
+        "SELECT * FROM users_table WHERE username = $1 AND id != $2",
+        [username, id]
       );
+      if (usernameExists.rows.length > 0) {
+        return NextResponse.json(
+          { error: "Username is already taken" },
+          { status: 409 }
+        );
+      }
+    }
 
     const hashedPassword = password
       ? await bcrypt.hash(password, 10)
@@ -101,14 +103,25 @@ export async function POST(request: Request) {
       values
     );
 
+    const newToken = jwt.sign(
+      {
+        id: id,
+        username: username,
+        email: email
+      },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "3d" }
+    );
+
     return NextResponse.json(
       {
         id,
-        username,
-        email,
+        username: username || existingUser.username,
+        email: email || existingUser.email,
         role,
         name,
         city,
+        token: newToken,
         zipcode,
         address,
         country,

@@ -25,6 +25,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const { user } = useSelector((state: RootState) => state.auth);
@@ -70,68 +71,74 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    try {
+      setError(null);
+      setLoading(true);
+      const { data: refetchedUsers = [], error: refetchError } =
+        await refetch();
 
-    const { data: refetchedUsers = [], error: refetchError } =
-    await refetch();
-
-    if (refetchError) {
-      setError("Failed to fetch users. Please try again.");
-      return;
-    }
-
-    if (isLogIn) {
-      try {
-        const userExists = refetchedUsers.some(
-          (user: UserProps) => user.email === email
-        );
-        if (!userExists) {
-          setError("Email not found. Please sign up.");
-        } else {
-          const data = await logInUser({ email, password }).unwrap();
-          if (!logInUserError) {
-            localStorage.setItem("token", data.token);
-            router.push('/profile');
-          }
-        }
-      } catch (err) {
-        console.log(err);
-        setError("Login failed. Please check your credentials.");
+      if (refetchError) {
+        setError("Failed to fetch users. Please try again.");
+        return;
       }
-    } else {
-      try {
-        const emailExists = refetchedUsers.some(
-          (user: UserProps) => user.email === email
-        );
-        const userNameExists = refetchedUsers.some(
-          (user: UserProps) => user.username === userName
-        );
 
-        if (emailExists) {
-          setError("Email is already registered. Please use another.");
-        } else if (userNameExists) {
-          setError("Username is already taken. Please choose another.");
-        } else {
-          await addUser({
-            username: userName,
-            email,
-            password,
-            role,
-            name: "",
-            city: "",
-            zipcode: "",
-            address: "",
-            country: "",
-          });
-          if (!addUserError) {
-            await refetch();
-            handleAddUser();
-            handleChange();
+      if (isLogIn) {
+        try {
+          const userExists = refetchedUsers.some(
+            (user: UserProps) => user.email === email
+          );
+          if (!userExists) {
+            setError("Email not found. Please sign up.");
+          } else {
+            const data = await logInUser({ email, password }).unwrap();
+            if (!logInUserError) {
+              localStorage.setItem("token", data.token);
+              router.push("/profile");
+            }
           }
+        } catch (err) {
+          console.log(err);
+          setError("Login failed. Please check your credentials.");
         }
-      } catch (err) {
-        setError("Sign-up failed. Please try again.");
+      } else {
+        try {
+          const emailExists = refetchedUsers.some(
+            (user: UserProps) => user.email === email
+          );
+          const userNameExists = refetchedUsers.some(
+            (user: UserProps) => user.username === userName
+          );
+
+          if (emailExists) {
+            setError("Email is already registered. Please use another.");
+          } else if (userNameExists) {
+            setError("Username is already taken. Please choose another.");
+          } else {
+            await addUser({
+              username: userName,
+              email,
+              password,
+              role,
+              name: "",
+              city: "",
+              zipcode: "",
+              address: "",
+              country: "",
+            });
+            if (!addUserError) {
+              await refetch();
+              handleAddUser();
+              handleChange();
+            }
+          }
+        } catch (err) {
+          setError("Sign-up failed. Please try again.");
+        }
       }
+    } catch (error) {
+      setError(error as string);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -216,10 +223,10 @@ const Login = () => {
         )}
         <button
           type="submit"
-          disabled={addUserLoading || logInUserLoading}
+          disabled={addUserLoading || logInUserLoading || loading}
           className="py-2 px-3 mt-3 rounded-lg font-semibold button-style disabled:bg-gray-600"
         >
-          {addUserLoading || logInUserLoading ? (
+          {addUserLoading || logInUserLoading || loading ? (
             <Load />
           ) : isLogIn ? (
             "Login"
@@ -236,7 +243,7 @@ const Login = () => {
       <button
         onClick={handleChange}
         className="px-6 py-4 rounded-lg font-semibold login-button disabled:bg-gray-600 disabled:hover:bg-gray-700"
-        disabled={addUserLoading || logInUserLoading}
+        disabled={addUserLoading || logInUserLoading || loading}
       >
         {isLogIn ? "Signup" : "Login"}
       </button>

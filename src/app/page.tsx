@@ -76,17 +76,17 @@ export default function Home() {
                   </Link>
                 </>
               ) : (
-                <>
-                  <p className="text-3xl xsm:text-2xl mb-2">
+                <div className="pb-2">
+                  <p className="text-2xl xsm:text-2xl mb-2">
                     Login to view Profile
                   </p>
                   <Link
                     href="/login"
-                    className="login-button mt-4"
+                    className="!p-2 !text-lg !font-semibold login-button"
                   >
                     Login
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>
