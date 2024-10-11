@@ -44,11 +44,10 @@ export async function GET(req: Request) {
 
       await client.query(`
         INSERT INTO users_table (username, email, password, role, name, city, zipcode, address, country) VALUES
-          ('john_doe', 'john@example.com', 'password123', 'buyer', 'John Doe', 'New York', '10001', '123 Main St', 'USA'),
-          ('jane_seller', 'jane@example.com', 'securepass', 'seller', 'Jane Smith', 'Los Angeles', '90001', '456 Market St', 'USA'),
-          ('admin_user', 'admin@example.com', 'adminpass', 'admin', 'Admin User', 'Chicago', '60601', '789 Admin St', 'USA'),
+          ('fruit-vendor', 'fr@example.com', 'password123', 'seller', 'Fruit', 'New York', '10001', '123 Main St', 'USA'),
+          ('bakery', 'jane@example.com', 'securepass', 'seller', 'bakery', 'Los Angeles', '90001', '456 Market St', 'USA'),
           ('buyer_bob', 'bob@example.com', 'bobpass', 'buyer', 'Bob Buyer', 'Houston', '77001', '321 Bay St', 'USA'),
-          ('seller_susan', 'susan@example.com', 'susanspass', 'seller', 'Susan Seller', 'Miami', '33101', '654 Ocean Dr', 'USA');
+          ('seller_susan', 'susan@example.com', 'susanspass', 'buyer', 'Susan Seller', 'Miami', '33101', '654 Ocean Dr', 'USA');
       `);
     }
     return NextResponse.json("Setup Complete", { status: 200 });

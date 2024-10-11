@@ -82,7 +82,7 @@ export interface UserProps extends UserType {
 }
 
 export interface UserFetch {
-  id: string;
+  id?: string;
   username: string;
   email: string;
 }

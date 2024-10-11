@@ -181,13 +181,6 @@ export const authSlice = createSlice({
         return state;
       }
     );
-    // builder.addMatcher(usersApi.endpoints.logout.matchFulfilled, (state) => {
-    //   state.token = null;
-    //   state.user = null;
-    //   sessionStorage.removeItem("isAuthenticated");
-    //   sessionStorage.removeItem("user");
-    //   return state;
-    // });
   },
 });
 

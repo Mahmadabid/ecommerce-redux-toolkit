@@ -32,10 +32,17 @@ export async function DELETE(request: Request) {
 
     const { id, adminId } = await request.json();
 
-    if (!id || !adminId) {
+    if (!adminId) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    if (id === adminId || !id) {
+      return NextResponse.json(
+        { error: "Cant delete admin" },
+        { status: 401 }
       );
     }
 

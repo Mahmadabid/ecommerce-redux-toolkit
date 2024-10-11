@@ -2,20 +2,20 @@
 
 import FloatingLabelInput from "@/components/form/FloatingLabelInput";
 import Notification from "@/components/products/Notification";
+import AddUser from "@/components/user/addUser";
+import AdminSwithcer from "@/components/user/adminSwithcer";
+import DeleteUser from "@/components/user/deleteUser";
 import Load from "@/components/utils/Load";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
 import { Role } from "@/components/utils/utils";
-import { UserFetch, UserProps } from "@/redux/slices/types";
+import { UserProps } from "@/redux/slices/types";
 import {
   refreshAuthentication,
-  useDeleteUserMutation,
   useFetchCredentialsQuery,
   useUpdateUserMutation,
 } from "@/redux/slices/user";
 import { RootState } from "@/redux/store";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,8 +39,8 @@ const Profile = () => {
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isAddUser, setIsAddUser] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
@@ -111,11 +111,6 @@ const Profile = () => {
     { error: updateUserError = "", isLoading: updateUserLoading },
   ] = useUpdateUserMutation();
 
-  const [
-    deleteUser,
-    { error: deleteUserError = "", isLoading: deleteUserLoading },
-  ] = useDeleteUserMutation();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -181,17 +176,8 @@ const Profile = () => {
     setIsAdmin((state) => !state);
   };
 
-  const handleDelete = async (id: string, adminId: string) => {
-    try {
-      setLoadingStates((prev) => ({ ...prev, [id]: true }));
-      setError(null);
-      await deleteUser({ id, adminId });
-      await refetch();
-    } catch (error) {
-      setError(error as string);
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [id]: false }));
-    }
+  const handleisAddUser = () => {
+    setIsAddUser((state) => !state);
   };
 
   if (isLoading) return <PageLoad />;
@@ -202,60 +188,24 @@ const Profile = () => {
       <h1 className="text-4xl my-4 font-bold text-h-color">
         {isAdmin ? "Admin" : "Profile"}
       </h1>
-      {user?.role === Role.admin && (
-        <div className="flex justify-center space-x-16">
-          <button
-            onClick={handleisAdmin}
-            className={`button-style p-3 py-2 rounded disabled:bg-gray-500`}
-            disabled={!isAdmin}
-          >
-            Profile
-          </button>
-          <button
-            onClick={handleisAdmin}
-            className={`login-button p-3 py-2 rounded disabled:bg-gray-500`}
-            disabled={isAdmin}
-          >
-            Admin
-          </button>
-        </div>
-      )}
+      <AdminSwithcer
+        role={user?.role}
+        isAdmin={isAdmin}
+        handleisAdmin={handleisAdmin}
+        handleisAddUser={handleisAddUser}
+        isAddUser={isAddUser}
+      />
       {isAdmin ? (
-        <>
-          <p className="text-red-500 my-2">
-            {deleteUserError
-              ? "data" in deleteUserError &&
-                typeof deleteUserError.data === "object" &&
-                deleteUserError.data !== null
-                ? (deleteUserError.data as { message: string }).message ||
-                  "Error occurred while updating profile"
-                : "Error occurred while updating profile"
-              : null}
-          </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 my-4 lg:grid-cols-3">
-            {Users.map((UserData: UserFetch) => (
-              <div
-                key={UserData.id}
-                className="flex justify-between items-center border border-gray-300 shadow-lg p-4 rounded-md bg-white relative"
-              >
-                <div className="flex flex-col items-center justify-center flex-1">
-                  <p className="font-semibold">{UserData.email}</p>
-                  <p className="text-sm text-gray-500">{UserData.username}</p>
-                </div>
-                <button
-                  onClick={() => handleDelete(UserData.id, user?.id || "")}
-                  className="text-[#632B24] ml-4 hover:text-[#81342a]"
-                >
-                  {loadingStates[UserData.id] ? (
-                    <Load className="fill-black w-6 h-6" />
-                  ) : (
-                    <FontAwesomeIcon icon={faTrash} />
-                  )}
-                </button>
-              </div>
-            ))}
-          </div>
-        </>
+        isAddUser ? (
+          <AddUser />
+        ) : (
+          <DeleteUser
+            Users={Users}
+            id={user?.id}
+            refetch={refetch}
+            setError={setError}
+          />
+        )
       ) : (
         <form onSubmit={handleSubmit}>
           {error && <p className="text-red-500 my-2">{error}</p>}
@@ -274,6 +224,7 @@ const Profile = () => {
               classname="max-w-md"
               label="Username"
               value={username}
+              required
               onChange={setUsername}
             />
             <FloatingLabelInput
