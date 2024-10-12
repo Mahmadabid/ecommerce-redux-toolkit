@@ -156,7 +156,7 @@ export default function CartPage() {
         </div>
       ) : (
         // Cart is empty
-        <div className="ustify-center flex items-center my-16 flex-col">
+        <div className="justify-center flex items-center my-16 flex-col">
           <p className="text-xl font-semibold">Cart is empty</p>
           <Link
             href="/products"

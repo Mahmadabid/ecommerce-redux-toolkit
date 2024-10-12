@@ -42,14 +42,108 @@ export async function GET(req: Request) {
         ('chocolate', 4, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM1bjLuveRZ6g0nUu_L_XeaMdK3oiyDk_HwA&s', 'bakery', 400);
       `);
 
-      await client.query(`
-        INSERT INTO users_table (username, email, password, role, name, city, zipcode, address, country) VALUES
-          ('fruit-vendor', 'fr@example.com', 'password123', 'seller', 'Fruit', 'New York', '10001', '123 Main St', 'USA'),
-          ('bakery', 'jane@example.com', 'securepass', 'seller', 'bakery', 'Los Angeles', '90001', '456 Market St', 'USA'),
-          ('buyer_bob', 'bob@example.com', 'bobpass', 'buyer', 'Bob Buyer', 'Houston', '77001', '321 Bay St', 'USA'),
-          ('seller_susan', 'susan@example.com', 'susanspass', 'buyer', 'Susan Seller', 'Miami', '33101', '654 Ocean Dr', 'USA');
-      `);
+      const users = [
+        {
+          username: "fruit-vendor",
+          email: "fr@example.com",
+          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          role: "seller",
+          name: "Fruit",
+          city: "New York",
+          zipcode: "10001",
+          address: "123 Main St",
+          country: "USA",
+        },
+        {
+          username: "bakery",
+          email: "jane@example.com",
+          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          role: "seller",
+          name: "bakery",
+          city: "Los Angeles",
+          zipcode: "90001",
+          address: "456 Market St",
+          country: "USA",
+        },
+        {
+          username: "buyer_bob",
+          email: "bob@example.com",
+          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          role: "buyer",
+          name: "Bob Buyer",
+          city: "Houston",
+          zipcode: "77001",
+          address: "321 Bay St",
+          country: "USA",
+        },
+        {
+          username: "seller_susan",
+          email: "susan@example.com",
+          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          role: "buyer",
+          name: "Susan Seller",
+          city: "Miami",
+          zipcode: "33101",
+          address: "654 Ocean Dr",
+          country: "USA",
+        },
+        {
+          username: "admin",
+          email: "admin@a.c",
+          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          role: "admin",
+          name: "Admin",
+          city: "Miami",
+          zipcode: "33101",
+          address: "654 Ocean Dr",
+          country: "USA",
+        },
+      ];
+
+      for (const user of users) {
+        const {
+          username,
+          email,
+          password,
+          role,
+          name,
+          city,
+          zipcode,
+          address,
+          country,
+        } = user;
+
+        const existingUser = await client.query(
+          `SELECT 1 FROM users_table WHERE email = $1 OR username = $2`,
+          [email, username]
+        );
+
+        if (existingUser.rowCount === 0) {
+          await client.query(
+            `
+            INSERT INTO users_table (username, email, password, role, name, city, zipcode, address, country)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          `,
+            [
+              username,
+              email,
+              password,
+              role,
+              name,
+              city,
+              zipcode,
+              address,
+              country,
+            ]
+          );
+        } else {
+          console.log(
+            `User with email "${email}" or username "${username}" already exists. Skipping...`
+          );
+        }
+      }
     }
+
     return NextResponse.json("Setup Complete", { status: 200 });
   } catch (error) {
     console.error("Error executing query:", error);

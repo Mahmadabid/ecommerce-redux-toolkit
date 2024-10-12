@@ -8,23 +8,19 @@ import DeleteUser from "@/components/user/deleteUser";
 import Load from "@/components/utils/Load";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
+import PageLogin from "@/components/utils/pageLogin";
 import { Role } from "@/components/utils/utils";
 import { UserProps } from "@/redux/slices/types";
 import {
-  refreshAuthentication,
   useFetchCredentialsQuery,
   useUpdateUserMutation,
 } from "@/redux/slices/user";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const router = useRouter();
-
-  const dispatch = useDispatch();
-
+  
   const { user } = useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState("");
@@ -60,10 +56,6 @@ const Profile = () => {
     role: Role.buyer,
   });
 
-  useEffect(() => {
-    dispatch(refreshAuthentication());
-  }, [dispatch]);
-
   const handleAddUser = () => {
     setNotification({ message: `Updated Profile`, visible: true });
     setTimeout(() => {
@@ -79,9 +71,7 @@ const Profile = () => {
   } = useFetchCredentialsQuery({});
 
   useEffect(() => {
-    if (!user?.ok) {
-      router.push("/login");
-    } else {
+    if (user) {
       const initialData = {
         email: user.email,
         username: user.username,
@@ -180,6 +170,7 @@ const Profile = () => {
     setIsAddUser((state) => !state);
   };
 
+  if(!user) return <PageLogin message="Login to view Profile" />;
   if (isLoading) return <PageLoad />;
   if (errorUsers) return <PageError />;
 

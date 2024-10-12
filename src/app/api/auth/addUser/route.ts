@@ -1,6 +1,7 @@
 import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { Role } from "@/components/utils/utils";
 
 export async function POST(request: Request) {
   const client = await pool.connect();
@@ -22,6 +23,13 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    if (!(role === Role.seller || role === Role.buyer)) {
+      return NextResponse.json(
+        { error: "You can only add buyer and seller" },
+        { status: 401 }
       );
     }
 

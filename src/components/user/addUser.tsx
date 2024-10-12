@@ -9,9 +9,7 @@ import {
 import { UserProps } from "@/redux/slices/types";
 import Notification from "../products/Notification";
 
-interface AddUserProps {}
-
-const AddUser: React.FC<AddUserProps> = ({}) => {
+const AddUser = ({}) => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");

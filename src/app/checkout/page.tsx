@@ -4,7 +4,6 @@ import FloatingLabelInput from "@/components/form/FloatingLabelInput";
 import ShippingForm from "@/components/form/ShippingForm";
 import Stepper from "@/components/form/Stepper";
 import { Step } from "@/components/form/type";
-import { User } from "@/components/utils/bin";
 import { RootState } from "@/redux/store";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,6 +27,7 @@ const Checkout = () => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [zipCode, setZipCode] = useState("");
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
@@ -109,8 +109,7 @@ const Checkout = () => {
           <div className={`h-0.5 w-full bg-gray-200 my-4`} />
           {/* Stepper */}
           <Stepper currentStep={currentStep} steps={steps} />
-          {/* Conditionally Render Each Step */}
-
+          
           {/* Contact Information */}
           {currentStep === 0 && (
             <form onSubmit={handleContactSubmit}>
@@ -125,7 +124,7 @@ const Checkout = () => {
                 onChange={setEmail}
               />
               <div className="flex justify-center space-x-20 mt-3">
-                {User.userId ? (
+                {user?.ok ? (
                   <Link href="/login" className="login-button">
                     Login
                   </Link>

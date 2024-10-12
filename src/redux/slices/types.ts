@@ -19,7 +19,31 @@ export interface RegisterRequest {
 export type AuthState = {
   user: UserType | null;
   token: string | null;
+  loading: boolean;
 };
+
+export type UserType = {
+  id: string;
+  username: string;
+  email: string;
+  role: Role;
+  name: string;
+  city: string;
+  zipcode: string;
+  address: string;
+  country: string;
+  ok?: boolean;
+};
+
+export interface UserProps extends UserType {
+  password: string;
+}
+
+export interface UserFetch {
+  id?: string;
+  username: string;
+  email: string;
+}
 
 export interface UserResponse {
   token: string;
@@ -62,27 +86,4 @@ export interface CartItem {
 
 export interface CartState {
   items: CartItem[];
-}
-
-export type UserType = {
-  id: string;
-  username: string;
-  email: string;
-  role: Role;
-  name: string;
-  city: string;
-  zipcode: string;
-  address: string;
-  country: string;
-  ok?: boolean;
-};
-
-export interface UserProps extends UserType {
-  password: string;
-}
-
-export interface UserFetch {
-  id?: string;
-  username: string;
-  email: string;
 }

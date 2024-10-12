@@ -1,6 +1,6 @@
 import Load from "./Load";
 
-const pageLoad = () => {
+const PageLoad = () => {
   return (
     <div className="flex justify-center items-center min-h-[70vh] text-h-color text-xl font-semibold">
       Loading&nbsp;
@@ -9,4 +9,4 @@ const pageLoad = () => {
   );
 };
 
-export default pageLoad;
+export default PageLoad;

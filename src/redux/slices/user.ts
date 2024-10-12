@@ -115,6 +115,7 @@ export const authSlice = createSlice({
   initialState: {
     user: null,
     token: null,
+    loading: true
   } as AuthState,
   reducers: {
     refreshAuthentication: (state) => {
@@ -136,8 +137,9 @@ export const authSlice = createSlice({
           address: response.address,
           ok: response.ok,
         };
+        state.loading = false;
       }
-      return state;
+      state.loading = false;
     },
   },
   extraReducers(builder) {

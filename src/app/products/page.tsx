@@ -38,7 +38,6 @@ const ProductDisplay = () => {
           />
         ))
       ) : (
-        // Products are empty
         <div>
           <p className="text-xl text-h-color mt-16">
             Sorry we are out of products. We will add them soon!

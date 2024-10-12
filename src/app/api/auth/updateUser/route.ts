@@ -107,10 +107,11 @@ export async function POST(request: Request) {
       {
         id: id,
         username: username,
-        email: email
+        email: email,
+        role: role
       },
       process.env.JWT_SECRET as string,
-      { expiresIn: "3d" }
+      { expiresIn: "10d" }
     );
 
     return NextResponse.json(

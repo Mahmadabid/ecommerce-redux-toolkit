@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToCart } from "@/redux/slices/cart";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Notification from "./Notification";
+import Load from "../utils/Load";
+import { useDeleteProductMutation } from "@/redux/slices/product";
 
 interface ProductProps {
   id: string;
@@ -18,7 +20,11 @@ interface ProductProps {
   seller: string;
   quantity: number;
   notification: { message: string; visible: boolean };
-  onAddToCart: (itemName: string) => void;
+  deleteProduct?: boolean;
+  onAddToCart?: (itemName: string) => void;
+  refetch?: () => void;
+  setDeleteProductError?: React.Dispatch<React.SetStateAction<string | null>>;
+  isFetching?: boolean;
 }
 
 const Product: React.FC<ProductProps> = ({
@@ -30,6 +36,10 @@ const Product: React.FC<ProductProps> = ({
   quantity,
   notification,
   onAddToCart,
+  deleteProduct,
+  refetch,
+  setDeleteProductError,
+  isFetching
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const [newQuantity, setNewQuantity] = useState(quantity);
@@ -37,6 +47,11 @@ const Product: React.FC<ProductProps> = ({
   const [inCart, setInCart] = useState(false);
   const [productQuantity, setProductQuantity] = useState(0);
   const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  const [
+    deleteProductData,
+    { isLoading: deleteProductLoading, error: deleteProductError = "" },
+  ] = useDeleteProductMutation();
 
   useEffect(() => {
     const cartItem = cartItems.find((item) => item.id === id);
@@ -54,27 +69,54 @@ const Product: React.FC<ProductProps> = ({
     setNewQuantity(quantity - cartQuantity);
   }, [id, quantity]);
 
-  const handlePurchase = () => {
-    const itemToAdd = {
-      id,
-      name,
-      price,
-      img,
-      seller,
-      quantity: productQuantity + 1,
-      totalQuantity: quantity,
-    };
-    dispatch(addToCart(itemToAdd));
+  const handleDelete = async (productId: string) => {
+    if (setDeleteProductError && refetch && deleteProduct) {
+      setDeleteProductError(null);
+  
+      try {
+        await deleteProductData({ productId });
+        await refetch();
+        
+      } catch (error) {
+        const errorMessage = deleteProductError
+          ? "data" in deleteProductError &&
+            typeof deleteProductError.data === "object" &&
+            deleteProductError.data !== null
+            ? (deleteProductError.data as { message: string }).message ||
+              "Error occurred while deleting the product"
+            : "Error occurred while deleting the product"
+          : "Unknown error occurred";
 
-    setNewQuantity((prevQuantity) => prevQuantity - 1);
-
-    if (newQuantity - 1 <= 0) {
-      setDisabled(true);
-      setInCart(true);
+        setDeleteProductError(errorMessage);
+      }
     }
+  };
 
-    onAddToCart(name);
-    setProductQuantity((state) => state + 1);
+  const handleAction = () => {
+    if (deleteProduct) {
+      handleDelete(id);
+    } else {
+      const itemToAdd = {
+        id,
+        name,
+        price,
+        img,
+        seller,
+        quantity: productQuantity + 1,
+        totalQuantity: quantity,
+      };
+      dispatch(addToCart(itemToAdd));
+
+      setNewQuantity((prevQuantity) => prevQuantity - 1);
+
+      if (newQuantity - 1 <= 0) {
+        setDisabled(true);
+        setInCart(true);
+      }
+
+      if (onAddToCart) onAddToCart(name);
+      setProductQuantity((state) => state + 1);
+    }
   };
 
   return (
@@ -90,7 +132,9 @@ const Product: React.FC<ProductProps> = ({
       </div>
       <div className="px-4 pb-4 text-center">
         <div>
-          <h2 className="text-lg font-semibold text-[#0a3b18]">{name.toUpperCase()}</h2>
+          <h2 className="text-lg font-semibold text-[#0a3b18]">
+            {name.toUpperCase()}
+          </h2>
           <p
             className={`${
               newQuantity < 1 ? "text-[#632B24]" : "text-slate-600"
@@ -101,7 +145,6 @@ const Product: React.FC<ProductProps> = ({
             ) : null}
             {newQuantity ? newQuantity : "Out of Stock"}
           </p>
-          {/* Display item is in cart */}
           {inCart && !newQuantity ? (
             <div className="bg-[#0a3b18] rounded p-1 mt-[6px]">
               <p className="font-semibold text-white">Already in cart</p>
@@ -119,11 +162,22 @@ const Product: React.FC<ProductProps> = ({
             <span>${price}</span>
           </p>
           <button
-            onClick={handlePurchase}
-            className="button-style px-2 py-2 rounded flex items-center disabled:bg-gray-500"
-            disabled={isDisabled}
+            onClick={handleAction}
+            className={`${
+              deleteProduct
+                ? "bg-[#632B24] text-white hover:bg-[#491d17] px-[10px]"
+                : "button-style px-2"
+            } py-2 rounded flex items-center disabled:bg-gray-500`}
+            disabled={isDisabled || deleteProductLoading || isFetching}
           >
-            <FontAwesomeIcon icon={faCartShopping} className="text-lg" />
+            {deleteProductLoading || isFetching ? (
+              <Load />
+            ) : (
+              <FontAwesomeIcon
+                icon={deleteProduct ? faTrash : faCartShopping}
+                className="text-lg"
+              />
+            )}
           </button>
         </div>
         <Notification {...notification} />
