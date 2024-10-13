@@ -4,6 +4,7 @@ import { useState } from "react";
 import Product from "@/components/products/Product";
 import Link from "next/link";
 import { ProductProps } from "@/redux/slices/types";
+import Notification from "./Notification";
 
 interface SellerPageClientProps {
   seller: string;
@@ -14,17 +15,12 @@ const SellerPageClient = ({ seller, products }: SellerPageClientProps) => {
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
+    remove: boolean;
   }>({
-    message: "",
+    message: "Success",
     visible: false,
+    remove: false
   });
-
-  const handleAddToCart = (itemName: string) => {
-    setNotification({ message: `${itemName} added to cart!`, visible: true });
-    setTimeout(() => {
-      setNotification({ message: "", visible: false });
-    }, 3500);
-  };
 
   return (
     <div className="text-center">
@@ -44,8 +40,7 @@ const SellerPageClient = ({ seller, products }: SellerPageClientProps) => {
           <Product
             key={index}
             {...product}
-            notification={notification}
-            onAddToCart={handleAddToCart}
+            setNotification={setNotification}
           />
         ))}
       </div>
@@ -56,6 +51,7 @@ const SellerPageClient = ({ seller, products }: SellerPageClientProps) => {
           </p>
         </div>
       ) : null}
+      <Notification {...notification} />
     </div>
   );
 };

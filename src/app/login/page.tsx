@@ -16,7 +16,7 @@ import {
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Login = () => {
   const [isLogIn, setIsLogIn] = useState(true);
@@ -25,22 +25,18 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
 
   const { user } = useSelector((state: RootState) => state.auth);
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
+    remove: boolean;
   }>({
-    message: "Added user, Please Login",
+    message: "Success",
     visible: false,
+    remove: false,
   });
   const router = useRouter();
-
-  useEffect(() => {
-    dispatch(refreshAuthentication());
-  }, [dispatch]);
 
   useEffect(() => {
     if (user?.ok) {
@@ -48,17 +44,17 @@ const Login = () => {
     }
   }, [user]);
 
-  const handleAddUser = () => {
-    setNotification({ message: `Added user, Please Login`, visible: true });
+  const handleAddNotification = () => {
+    setNotification({ message: `Added user, Please Login`, visible: true, remove: false });
     setTimeout(() => {
-      setNotification({ message: "Added user, Please Login", visible: false });
+      setNotification({ message: "Added user, Please Login", visible: false, remove: false });
     }, 5000);
   };
 
   const {
+    data: Users = [],
     error: errorUsers = "",
-    isLoading,
-    refetch,
+    isFetching,
   } = useFetchCredentialsQuery({});
 
   const [addUser, { error: addUserError = "", isLoading: addUserLoading }] =
@@ -73,18 +69,10 @@ const Login = () => {
     e.preventDefault();
     try {
       setError(null);
-      setLoading(true);
-      const { data: refetchedUsers = [], error: refetchError } =
-        await refetch();
-
-      if (refetchError) {
-        setError("Failed to fetch users. Please try again.");
-        return;
-      }
 
       if (isLogIn) {
         try {
-          const userExists = refetchedUsers.some(
+          const userExists = Users.some(
             (user: UserProps) => user.email === email
           );
           if (!userExists) {
@@ -102,10 +90,10 @@ const Login = () => {
         }
       } else {
         try {
-          const emailExists = refetchedUsers.some(
+          const emailExists = Users.some(
             (user: UserProps) => user.email === email
           );
-          const userNameExists = refetchedUsers.some(
+          const userNameExists = Users.some(
             (user: UserProps) => user.username === userName
           );
 
@@ -126,8 +114,7 @@ const Login = () => {
               country: "",
             });
             if (!addUserError) {
-              await refetch();
-              handleAddUser();
+              handleAddNotification();
               handleChange();
             }
           }
@@ -137,8 +124,6 @@ const Login = () => {
       }
     } catch (error) {
       setError(error as string);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -148,7 +133,7 @@ const Login = () => {
     setError(null);
   };
 
-  if (isLoading) return <PageLoad />;
+  if (isFetching) return <PageLoad />;
   if (errorUsers) return <PageError />;
 
   return (
@@ -223,10 +208,10 @@ const Login = () => {
         )}
         <button
           type="submit"
-          disabled={addUserLoading || logInUserLoading || loading}
+          disabled={addUserLoading || logInUserLoading}
           className="py-2 px-3 mt-3 rounded-lg font-semibold button-style disabled:bg-gray-600"
         >
-          {addUserLoading || logInUserLoading || loading ? (
+          {addUserLoading || logInUserLoading ? (
             <Load />
           ) : isLogIn ? (
             "Login"
@@ -243,7 +228,7 @@ const Login = () => {
       <button
         onClick={handleChange}
         className="px-6 py-4 rounded-lg font-semibold login-button disabled:bg-gray-600 disabled:hover:bg-gray-700"
-        disabled={addUserLoading || logInUserLoading || loading}
+        disabled={addUserLoading || logInUserLoading}
       >
         {isLogIn ? "Signup" : "Login"}
       </button>

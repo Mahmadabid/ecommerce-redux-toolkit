@@ -71,7 +71,6 @@ export async function POST(request: Request) {
         id: auth.id,
         username: auth.username,
         email: auth.email,
-        role: role
       },
       process.env.JWT_SECRET as string,
       { expiresIn: "10d" }

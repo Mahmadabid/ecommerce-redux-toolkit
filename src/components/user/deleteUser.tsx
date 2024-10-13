@@ -4,8 +4,6 @@ import UserToDelete from "./userToDelete";
 
 interface DeleteUserProps {
   Users: UserFetch[];
-  id: string | undefined;
-  refetch: () => void;
   setNotification: React.Dispatch<
     React.SetStateAction<{
       message: string;
@@ -18,8 +16,6 @@ interface DeleteUserProps {
 
 const DeleteUser: React.FC<DeleteUserProps> = ({
   Users,
-  id,
-  refetch,
   setNotification,
   isFetching,
 }) => {
@@ -33,8 +29,6 @@ const DeleteUser: React.FC<DeleteUserProps> = ({
           <UserToDelete
             UserData={UserData}
             key={UserData.id}
-            id={id}
-            refetch={refetch}
             setNotification={setNotification}
             isFetching={isFetching}
             setDeleteUserError={setDeleteUserError}

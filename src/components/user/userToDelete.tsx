@@ -6,8 +6,6 @@ import { useDeleteUserMutation } from "@/redux/slices/user";
 
 interface UserToDeleteProps {
   UserData: UserFetch;
-  id: string | undefined;
-  refetch: () => void;
   setNotification: React.Dispatch<
     React.SetStateAction<{
       message: string;
@@ -21,8 +19,6 @@ interface UserToDeleteProps {
 
 const UserToDelete: React.FC<UserToDeleteProps> = ({
   UserData,
-  id,
-  refetch,
   setNotification,
   isFetching,
   setDeleteUserError,
@@ -47,12 +43,11 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
     { error: deleteUserError = "", isLoading: deleteUserLoading },
   ] = useDeleteUserMutation();
 
-  const handleDelete = async (id: string, adminId: string) => {
+  const handleDelete = async (userId: string) => {
     try {
       setDeleteUserError(null);
-      await deleteUser({ id, adminId });
+      await deleteUser({ userId });
       if (!deleteUserError) {
-        await refetch();
         handleDeleteNotification();
       }
     } catch (error) {
@@ -76,7 +71,7 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
         <p className="text-sm text-gray-500">{UserData.username}</p>
       </div>
       <button
-        onClick={() => handleDelete(UserData.id || "", id || "")}
+        onClick={() => handleDelete(UserData.id || "")}
         className="text-[#632B24] ml-4 disabled:text-gray-600 hover:text-[#81342a]"
         disabled={!UserData.id || deleteUserLoading || isFetching}
       >

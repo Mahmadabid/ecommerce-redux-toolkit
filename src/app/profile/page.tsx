@@ -34,7 +34,6 @@ const Profile = () => {
     data: Users = [],
     error: errorUsers = "",
     isFetching,
-    refetch,
   } = useFetchCredentialsQuery({});
 
   const handleisAdmin = () => {
@@ -67,8 +66,6 @@ const Profile = () => {
         ) : (
           <DeleteUser
             Users={Users}
-            id={user?.id}
-            refetch={refetch}
             setNotification={setNotification}
             isFetching={isFetching}
           />

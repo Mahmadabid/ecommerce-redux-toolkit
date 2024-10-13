@@ -40,7 +40,6 @@ const Page = () => {
     data: products = [],
     error,
     isFetching,
-    refetch,
   } = useGetProductsBySellerQuery(user?.username || "");
 
   if(!user) return <PageLogin message="Login to sell" />;
@@ -82,7 +81,6 @@ const Page = () => {
                 {...product}
                 isDelete={true}
                 setDeleteProductError={setDeleteProductError}
-                refetch={refetch}
                 setNotification={setNotification}
               />
             ))
@@ -102,7 +100,6 @@ const Page = () => {
             userId={user?.id}
             username={user?.username}
             isFetching={isFetching}
-            refetch={refetch}
             handleStoreChange={handleisProduct}
             setNotification={setNotification}
           />

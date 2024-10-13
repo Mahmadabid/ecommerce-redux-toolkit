@@ -13,12 +13,15 @@ export const productApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Products"],
   endpoints: (builder) => ({
     getProducts: builder.query<ProductProps[], void>({
       query: () => "products/fetch",
+      providesTags: ["Products"],
     }),
     getProductsBySeller: builder.query<ProductProps[], string>({
       query: (seller) => `products/fetch?seller=${seller}`,
+      providesTags: ["Products"],
     }),
     addProducts: builder.mutation({
       query: ({ seller, img, name, quantity, price, userId }) => ({
@@ -33,6 +36,7 @@ export const productApi = createApi({
           userId,
         },
       }),
+      invalidatesTags: ["Products"],
     }),
     deleteProduct: builder.mutation({
       query: ({ productId }) => ({
@@ -42,6 +46,7 @@ export const productApi = createApi({
           productId
         },
       }),
+      invalidatesTags: ["Products"],
     }),
   }),
 });

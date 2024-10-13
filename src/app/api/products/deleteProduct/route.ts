@@ -1,6 +1,5 @@
 import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { Role } from "@/components/utils/utils";
 import { DecodedTokenReturn, jwtVerification } from "@/components/user/auth";
 
@@ -24,16 +23,16 @@ export async function DELETE(request: Request) {
       );
     }
 
-    const checkIsSellerQuery =
-      "SELECT role FROM users_table WHERE id = $1";
-    const { rows: sellerRows } = await client.query(checkIsSellerQuery, [
-      auth.id,
-    ]);
+    const checkUserRoleQuery = `SELECT role FROM users_table WHERE id = $1`;
+    const checkSellerQuery = `SELECT seller FROM products_table WHERE id = $1`;
+
+    const { rows: userRows } = await client.query(checkUserRoleQuery, [auth.id]);
+    const { rows: productRows } = await client.query(checkSellerQuery, [productId]);
 
     if (
-      sellerRows.length === 0 ||
-      !(sellerRows[0].role === Role.admin ||
-      sellerRows[0].role === Role.seller)
+      userRows.length === 0 ||
+      productRows.length === 0 ||
+      !(userRows[0].role === Role.admin || userRows[0].role === Role.seller) || productRows[0].seller !== auth.username
     ) {
       return NextResponse.json(
         { error: "You are not authorized" },

@@ -9,7 +9,6 @@ interface AddProductProps {
   userId: string;
   username: string;
   isFetching: boolean;
-  refetch: () => void;
   handleStoreChange: () => void;
   setNotification: React.Dispatch<
     React.SetStateAction<{
@@ -24,7 +23,6 @@ const AddProduct: React.FC<AddProductProps> = ({
   userId,
   username,
   isFetching,
-  refetch,
   handleStoreChange,
   setNotification,
 }) => {
@@ -53,7 +51,7 @@ const AddProduct: React.FC<AddProductProps> = ({
 
   const [
     addProduct,
-    { isLoading: addProductoading, error: addProductError = "" },
+    { isLoading: addProductoading, error: addProductError },
   ] = useAddProductsMutation();
 
   const handleChange = (field: keyof typeof formData, value: string) => {
@@ -88,7 +86,6 @@ const AddProduct: React.FC<AddProductProps> = ({
     });
 
     if (!addProductError) {
-      await refetch();
 
       handleAddNotification(formData.name);
 

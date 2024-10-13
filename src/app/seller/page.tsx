@@ -9,6 +9,7 @@ import { useState } from "react";
 import PageLoad from "@/components/utils/pageLoad";
 import PageError from "@/components/utils/pageError";
 import Link from "next/link";
+import Notification from "@/components/products/Notification";
 
 const SellerPage = () => {
   const searchParams = useSearchParams();
@@ -18,22 +19,18 @@ const SellerPage = () => {
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
+    remove: boolean;
   }>({
-    message: "",
+    message: "Success",
     visible: false,
+    remove: false,
   });
+
   const {
     data: products = [],
     error,
     isLoading,
   } = useGetProductsBySellerQuery(seller);
-
-  const handleAddToCart = (itemName: string) => {
-    setNotification({ message: `${itemName} added to cart!`, visible: true });
-    setTimeout(() => {
-      setNotification({ message: "", visible: false });
-    }, 3500);
-  };
 
   if (isLoading) return <PageLoad />;
   if (error) return <PageError />;
@@ -53,12 +50,7 @@ const SellerPage = () => {
       </h1>
       <div className="flex flex-wrap justify-center mt-10">
         {products.map((product, index) => (
-          <Product
-            key={index}
-            {...product}
-            notification={notification}
-            onAddToCart={handleAddToCart}
-          />
+          <Product key={index} {...product} setNotification={setNotification} />
         ))}
       </div>
       {products.length === 0 ? (
@@ -68,6 +60,7 @@ const SellerPage = () => {
           </p>
         </div>
       ) : null}
+      <Notification {...notification} />
     </div>
   );
 };

@@ -7,11 +7,7 @@ export async function GET() {
     let result;
 
     result = await client.query(
-      `SELECT username, email, 
-        CASE 
-          WHEN role = 'admin' THEN NULL 
-          ELSE id 
-        END AS id 
+      `SELECT username, email, id, role
       FROM users_table`
     );
 

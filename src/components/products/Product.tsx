@@ -26,7 +26,6 @@ interface ProductProps {
       remove: boolean;
     }>
   >;
-  refetch?: () => void;
   setDeleteProductError?: React.Dispatch<React.SetStateAction<string | null>>;
   isFetching?: boolean;
 }
@@ -40,7 +39,6 @@ const Product: React.FC<ProductProps> = ({
   quantity,
   isDelete,
   setNotification,
-  refetch,
   setDeleteProductError,
   isFetching,
 }) => {
@@ -84,13 +82,12 @@ const Product: React.FC<ProductProps> = ({
   }, [id, quantity]);
 
   const handleDelete = async (productId: string) => {
-    if (setDeleteProductError && refetch && isDelete) {
+    if (setDeleteProductError  && isDelete) {
       setDeleteProductError(null);
 
       try {
         await deleteProductData({ productId });
         if (!deleteProductError) {
-          await refetch();
           handleNotification("");
         }
       } catch (error) {
@@ -169,7 +166,7 @@ const Product: React.FC<ProductProps> = ({
         </div>
         <h2 className="font-semibold text-slate-600 mt-[6px]">
           Seller{": "}
-          <Link href={`/seller?seller=${seller}`} className="text-slate-950">
+          <Link href={`/seller?seller=${seller}`} target="_blank" className="text-slate-950">
             @{seller}
           </Link>
         </h2>

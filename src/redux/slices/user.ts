@@ -14,15 +14,16 @@ export const usersApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Users"],
   endpoints: (builder) => ({
     fetchCredentials: builder.query({
       query: () => "/fetchcredentials",
+      providesTags: ["Users"],
     }),
     addUser: builder.mutation({
       query: ({
         username,
         email,
-        id,
         password,
         role,
         name,
@@ -38,7 +39,6 @@ export const usersApi = createApi({
           email,
           password,
           role,
-          id,
           name,
           city,
           zipcode,
@@ -46,6 +46,7 @@ export const usersApi = createApi({
           country,
         },
       }),
+      invalidatesTags: ["Users"],
     }),
     loginUser: builder.mutation({
       query: ({ email, password }) => ({
@@ -58,15 +59,7 @@ export const usersApi = createApi({
       }),
     }),
     updateUser: builder.mutation({
-      query: ({
-        password,
-        zipcode,
-        country,
-        city,
-        role,
-        name,
-        address,
-      }) => ({
+      query: ({ password, zipcode, country, city, role, name, address }) => ({
         url: "/auth/updateUser",
         method: "POST",
         body: {
@@ -79,16 +72,17 @@ export const usersApi = createApi({
           address,
         },
       }),
+      invalidatesTags: ["Users"],
     }),
     deleteUser: builder.mutation({
-      query: ({ id, adminId }) => ({
+      query: ({ userId }) => ({
         url: "/auth/deleteUser",
         method: "DELETE",
         body: {
-          id,
-          adminId
+          userId,
         },
       }),
+      invalidatesTags: ["Users"],
     }),
   }),
 });
@@ -98,7 +92,7 @@ export const {
   useAddUserMutation,
   useLoginUserMutation,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
 } = usersApi;
 
 const usersReducer = usersApi.reducer;
@@ -109,7 +103,7 @@ export const authSlice = createSlice({
   initialState: {
     user: null,
     token: null,
-    loading: true
+    loading: true,
   } as AuthState,
   reducers: {
     refreshAuthentication: (state) => {
@@ -129,7 +123,6 @@ export const authSlice = createSlice({
           country: response.country,
           zipcode: response.zipcode,
           address: response.address,
-          ok: response.ok,
         };
         state.loading = false;
       }
@@ -151,7 +144,6 @@ export const authSlice = createSlice({
           country: payload.country,
           zipcode: payload.zipcode,
           address: payload.address,
-          ok: payload.ok,
         };
         localStorage.setItem("user", `${JSON.stringify(payload)}`);
         return state;
@@ -171,7 +163,6 @@ export const authSlice = createSlice({
           country: payload.country,
           zipcode: payload.zipcode,
           address: payload.address,
-          ok: payload.ok,
         };
         localStorage.setItem("user", `${JSON.stringify(payload)}`);
         return state;

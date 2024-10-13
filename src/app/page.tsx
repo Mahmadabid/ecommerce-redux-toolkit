@@ -8,20 +8,12 @@ import {
   faAddressCard,
   faCashRegister,
 } from "@fortawesome/free-solid-svg-icons";
-import { refreshAuthentication } from "@/redux/slices/user";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
 export default function Home() {
 
-  const dispatch = useDispatch();
-
   const { user } = useSelector((state: RootState) => state.auth);
-  
-  useEffect(() => {
-    dispatch(refreshAuthentication());
-  }, [dispatch]);
   
   return (
     <div>
@@ -63,7 +55,7 @@ export default function Home() {
         <div>
           <div className="flex justify-center items-center">
             <div className="border border-slate-200 my-16 w-fit bg-gray-100 rounded p-2">
-              {user?.id ? (
+              {user ? (
                 <>
                   <p className="text-3xl xsm:text-2xl mb-2">View Profile</p>
                   <Link href="/profile" className="mt-4">

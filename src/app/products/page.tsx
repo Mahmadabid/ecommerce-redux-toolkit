@@ -15,7 +15,7 @@ const ProductDisplay = () => {
   }>({
     message: "Success",
     visible: false,
-    remove: false
+    remove: false,
   });
   const { data: products = [], error, isLoading } = useGetProductsQuery();
 
@@ -23,23 +23,26 @@ const ProductDisplay = () => {
   if (error) return <PageError />;
 
   return (
-    <div className="flex flex-wrap justify-center mt-8">
-      {products.length > 0 ? (
-        products.map(product => (
-          <Product
-            key={product.id}
-            {...product}
-            setNotification={setNotification}
-          />
-        ))
-      ) : (
-        <div>
-          <p className="text-xl text-h-color mt-16">
-            Sorry we are out of products. We will add them soon!
-          </p>
-        </div>
-      )}
-      <Notification {...notification} />
+    <div className="text-center">
+      <h1 className="text-4xl my-4 font-bold text-h-color">Products</h1>
+      <div className="flex flex-wrap justify-center mt-8">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <Product
+              key={product.id}
+              {...product}
+              setNotification={setNotification}
+            />
+          ))
+        ) : (
+          <div>
+            <p className="text-xl text-h-color mt-16">
+              Sorry we are out of products. We will add them soon!
+            </p>
+          </div>
+        )}
+        <Notification {...notification} />
+      </div>
     </div>
   );
 };
