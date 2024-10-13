@@ -59,10 +59,7 @@ export const usersApi = createApi({
     }),
     updateUser: builder.mutation({
       query: ({
-        id,
-        email,
         password,
-        username,
         zipcode,
         country,
         city,
@@ -73,10 +70,7 @@ export const usersApi = createApi({
         url: "/auth/updateUser",
         method: "POST",
         body: {
-          id,
-          email,
           password,
-          username,
           zipcode,
           country,
           city,

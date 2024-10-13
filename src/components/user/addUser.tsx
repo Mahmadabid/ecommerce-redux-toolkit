@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import FloatingLabelInput from "../form/FloatingLabelInput";
 import Load from "../utils/Load";
 import { Role } from "../utils/utils";
@@ -7,27 +7,37 @@ import {
   useFetchCredentialsQuery,
 } from "@/redux/slices/user";
 import { UserProps } from "@/redux/slices/types";
-import Notification from "../products/Notification";
 
-const AddUser = ({}) => {
+interface AddUserProps {
+  setNotification: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      visible: boolean;
+      remove: boolean;
+    }>
+  >;
+}
+
+const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState<{
-    message: string;
-    visible: boolean;
-  }>({
-    message: "Added user",
-    visible: false,
-  });
 
-  const handleAddUser = () => {
-    setNotification({ message: `Added user`, visible: true });
+  const handleUpdateNotification = () => {
+    setNotification({
+      message: `Added Profile`,
+      visible: true,
+      remove: false,
+    });
     setTimeout(() => {
-      setNotification({ message: "Added user", visible: false });
+      setNotification({
+        message: "Added Profile",
+        visible: false,
+        remove: false,
+      });
     }, 5000);
   };
 
@@ -74,7 +84,7 @@ const AddUser = ({}) => {
         });
         if (!addUserError) {
           await refetch();
-          handleAddUser();
+          handleUpdateNotification();
         }
       }
     } catch (error) {
@@ -141,7 +151,6 @@ const AddUser = ({}) => {
           {loading ? <Load /> : "Add User"}
         </button>
       </form>
-      <Notification {...notification} />
     </>
   );
 };

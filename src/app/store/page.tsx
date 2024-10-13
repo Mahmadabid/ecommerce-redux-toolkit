@@ -1,6 +1,7 @@
 "use client";
 
 import AddProduct from "@/components/products/addProduct";
+import Notification from "@/components/products/Notification";
 import Product from "@/components/products/Product";
 import StoreSwithcer from "@/components/products/storeSwithcer";
 import PageError from "@/components/utils/pageError";
@@ -21,13 +22,14 @@ const Page = () => {
   const [isProduct, setIsProduct] = useState(true);
   const { user } = useSelector((state: RootState) => state.auth);
   const [deleteProductError, setDeleteProductError] = useState<string | null>(null);
-
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
+    remove: boolean;
   }>({
-    message: "Added Product",
+    message: "Success",
     visible: false,
+    remove: false
   });
 
   const handleisProduct = () => {
@@ -78,10 +80,10 @@ const Page = () => {
               <Product
                 key={product.id}
                 {...product}
-                notification={notification}
-                deleteProduct={true}
+                isDelete={true}
                 setDeleteProductError={setDeleteProductError}
                 refetch={refetch}
+                setNotification={setNotification}
               />
             ))
           ) : (
@@ -106,6 +108,7 @@ const Page = () => {
           />
         </div>
       )}
+      <Notification {...notification} />
     </div>
   );
 };

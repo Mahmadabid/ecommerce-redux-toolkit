@@ -3,6 +3,7 @@ import FloatingLabelInput from "../form/FloatingLabelInput";
 import Image from "next/image";
 import { useAddProductsMutation } from "@/redux/slices/product";
 import Load from "../utils/Load";
+import Notification from "./Notification";
 
 interface AddProductProps {
   userId: string;
@@ -14,6 +15,7 @@ interface AddProductProps {
     React.SetStateAction<{
       message: string;
       visible: boolean;
+      remove: boolean;
     }>
   >;
 }
@@ -24,7 +26,7 @@ const AddProduct: React.FC<AddProductProps> = ({
   isFetching,
   refetch,
   handleStoreChange,
-  setNotification
+  setNotification,
 }) => {
   const [formData, setFormData] = useState({
     img: "",
@@ -34,10 +36,18 @@ const AddProduct: React.FC<AddProductProps> = ({
   });
   const [ProductError, setproductError] = useState<string | null>(null);
 
-  const handleAddProduct = () => {
-    setNotification({ message: `Added Product`, visible: true });
+  const handleAddNotification = (itemName: string) => {
+    setNotification({
+      message: `${itemName} Added Product`,
+      visible: true,
+      remove: false,
+    });
     setTimeout(() => {
-      setNotification({ message: "Added Product", visible: false });
+      setNotification({
+        message: "Added Product",
+        visible: false,
+        remove: false,
+      });
     }, 5000);
   };
 
@@ -77,11 +87,13 @@ const AddProduct: React.FC<AddProductProps> = ({
       userId,
     });
 
-    await refetch();
+    if (!addProductError) {
+      await refetch();
 
-    handleAddProduct();
+      handleAddNotification(formData.name);
 
-    handleStoreChange();
+      handleStoreChange();
+    }
   };
 
   return (

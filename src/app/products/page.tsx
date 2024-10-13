@@ -1,5 +1,6 @@
 "use client";
 
+import Notification from "@/components/products/Notification";
 import Product from "@/components/products/Product";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
@@ -10,18 +11,13 @@ const ProductDisplay = () => {
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
+    remove: boolean;
   }>({
-    message: "",
+    message: "Success",
     visible: false,
+    remove: false
   });
   const { data: products = [], error, isLoading } = useGetProductsQuery();
-
-  const handleAddToCart = (itemName: string) => {
-    setNotification({ message: `${itemName} added to cart!`, visible: true });
-    setTimeout(() => {
-      setNotification({ message: "", visible: false });
-    }, 3500);
-  };
 
   if (isLoading) return <PageLoad />;
   if (error) return <PageError />;
@@ -33,8 +29,7 @@ const ProductDisplay = () => {
           <Product
             key={product.id}
             {...product}
-            notification={notification}
-            onAddToCart={handleAddToCart}
+            setNotification={setNotification}
           />
         ))
       ) : (
@@ -44,6 +39,7 @@ const ProductDisplay = () => {
           </p>
         </div>
       )}
+      <Notification {...notification} />
     </div>
   );
 };

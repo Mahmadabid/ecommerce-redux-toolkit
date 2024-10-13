@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { addToCart } from "@/redux/slices/cart";
 import React, { useEffect, useState } from "react";
-import Notification from "./Notification";
 import Load from "../utils/Load";
 import { useDeleteProductMutation } from "@/redux/slices/product";
 
@@ -19,9 +18,14 @@ interface ProductProps {
   img: string;
   seller: string;
   quantity: number;
-  notification: { message: string; visible: boolean };
-  deleteProduct?: boolean;
-  onAddToCart?: (itemName: string) => void;
+  isDelete?: boolean;
+  setNotification: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      visible: boolean;
+      remove: boolean;
+    }>
+  >;
   refetch?: () => void;
   setDeleteProductError?: React.Dispatch<React.SetStateAction<string | null>>;
   isFetching?: boolean;
@@ -34,12 +38,11 @@ const Product: React.FC<ProductProps> = ({
   img,
   seller,
   quantity,
-  notification,
-  onAddToCart,
-  deleteProduct,
+  isDelete,
+  setNotification,
   refetch,
   setDeleteProductError,
-  isFetching
+  isFetching,
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const [newQuantity, setNewQuantity] = useState(quantity);
@@ -52,6 +55,17 @@ const Product: React.FC<ProductProps> = ({
     deleteProductData,
     { isLoading: deleteProductLoading, error: deleteProductError = "" },
   ] = useDeleteProductMutation();
+
+  const handleNotification = (itemName: string) => {
+    setNotification({
+      message: `${isDelete ? "Deleted Product" : `${itemName} added to cart!`}`,
+      visible: true,
+      remove: isDelete ? true : false,
+    });
+    setTimeout(() => {
+      setNotification({ message: "", visible: false, remove: false });
+    }, 3500);
+  };
 
   useEffect(() => {
     const cartItem = cartItems.find((item) => item.id === id);
@@ -70,13 +84,15 @@ const Product: React.FC<ProductProps> = ({
   }, [id, quantity]);
 
   const handleDelete = async (productId: string) => {
-    if (setDeleteProductError && refetch && deleteProduct) {
+    if (setDeleteProductError && refetch && isDelete) {
       setDeleteProductError(null);
-  
+
       try {
         await deleteProductData({ productId });
-        await refetch();
-        
+        if (!deleteProductError) {
+          await refetch();
+          handleNotification("");
+        }
       } catch (error) {
         const errorMessage = deleteProductError
           ? "data" in deleteProductError &&
@@ -93,7 +109,7 @@ const Product: React.FC<ProductProps> = ({
   };
 
   const handleAction = () => {
-    if (deleteProduct) {
+    if (isDelete) {
       handleDelete(id);
     } else {
       const itemToAdd = {
@@ -114,7 +130,7 @@ const Product: React.FC<ProductProps> = ({
         setInCart(true);
       }
 
-      if (onAddToCart) onAddToCart(name);
+      handleNotification(name);
       setProductQuantity((state) => state + 1);
     }
   };
@@ -164,7 +180,7 @@ const Product: React.FC<ProductProps> = ({
           <button
             onClick={handleAction}
             className={`${
-              deleteProduct
+              isDelete
                 ? "bg-[#632B24] text-white hover:bg-[#491d17] px-[10px]"
                 : "button-style px-2"
             } py-2 rounded flex items-center disabled:bg-gray-500`}
@@ -174,13 +190,12 @@ const Product: React.FC<ProductProps> = ({
               <Load />
             ) : (
               <FontAwesomeIcon
-                icon={deleteProduct ? faTrash : faCartShopping}
+                icon={isDelete ? faTrash : faCartShopping}
                 className="text-lg"
               />
             )}
           </button>
         </div>
-        <Notification {...notification} />
       </div>
     </div>
   );

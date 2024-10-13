@@ -12,7 +12,9 @@ const config: Config = {
     extend: {
       colors: {
         'h-color': '#415F6B',
-        'b-color': '#1b2e3c'
+        'b-color': '#1b2e3c',
+        'r-color': '#632B24',
+        'h-r-color': '#491d17'
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
