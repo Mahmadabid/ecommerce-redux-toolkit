@@ -6,7 +6,6 @@ export interface DecodedTokenReturn {
   email: string;
   id: string;
   username: string;
-  role: Role;
 }
 
 export const jwtVerification = (
@@ -29,9 +28,9 @@ export const jwtVerification = (
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
 
-    const { email, id, username, role } = decodedToken as DecodedTokenReturn;
+    const { email, id, username } = decodedToken as DecodedTokenReturn;
 
-    return { email, id, username, role };
+    return { email, id, username };
   } catch (error) {
     return NextResponse.json(
       { error: "Invalid or expired token" },

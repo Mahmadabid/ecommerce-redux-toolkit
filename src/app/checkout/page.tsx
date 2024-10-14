@@ -8,7 +8,7 @@ import { RootState } from "@/redux/store";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Checkout = () => {
@@ -28,6 +28,18 @@ const Checkout = () => {
   const [country, setCountry] = useState("");
   const [zipCode, setZipCode] = useState("");
   const { user } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email);
+      setAddress(user.address);
+      setFullName(user.name);
+      setAddress(user.address);
+      setCountry(user.country);
+      setCity(user.city);
+      setZipCode(user.zipcode);
+    }
+  }, [user]);
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
@@ -109,7 +121,7 @@ const Checkout = () => {
           <div className={`h-0.5 w-full bg-gray-200 my-4`} />
           {/* Stepper */}
           <Stepper currentStep={currentStep} steps={steps} />
-          
+
           {/* Contact Information */}
           {currentStep === 0 && (
             <form onSubmit={handleContactSubmit}>
@@ -124,7 +136,7 @@ const Checkout = () => {
                 onChange={setEmail}
               />
               <div className="flex justify-center space-x-20 mt-3">
-                {user?.ok ? (
+                {!user ? (
                   <Link href="/login" className="login-button">
                     Login
                   </Link>
@@ -175,7 +187,6 @@ const Checkout = () => {
                   <input
                     type="checkbox"
                     className="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded transition cursor-pointer"
-                    defaultChecked={true}
                     checked={check}
                     onChange={(e) => setCheck(e.target.checked)}
                     required

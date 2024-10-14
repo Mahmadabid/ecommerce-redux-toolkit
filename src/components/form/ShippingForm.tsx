@@ -29,14 +29,6 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
     e.preventDefault();
 
     handleNext();
-    // If validation passes, handle form submission (e.g., API call)
-    console.log("Form submitted:", {
-      fullName,
-      shippingEmail,
-      address,
-      city,
-      zipCode,
-    });
   };
 
   return (

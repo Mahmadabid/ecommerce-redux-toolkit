@@ -2,13 +2,14 @@
 
 import PageError from "@/components/utils/pageError";
 import SellerPageClient from "../../../components/products/SellerPageClient";
+import Head from "next/head";
 
 async function fetchProducts(sellerName: string) {
   let products = [];
   let error = null;
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}products?seller=${sellerName}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}products/fetch?seller=${sellerName}`);
     if (!res.ok) {
       throw new Error("Failed to fetch products");
     }
@@ -27,7 +28,15 @@ const SellerPage = async ({ params }: { params: { seller: string } }) => {
 
   if (error) return <PageError />;
 
-  return <SellerPageClient seller={seller} products={products} />;
+  return (
+    <>
+      <Head>
+        <title>{`${seller}'s Products - Marketplace`}</title>
+        <meta name="description" content={`Browse products from ${seller}.`} />
+      </Head>
+      <SellerPageClient seller={seller} products={products} />
+    </>
+  );
 };
 
 export default SellerPage;

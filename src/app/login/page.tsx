@@ -39,7 +39,7 @@ const Login = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user?.ok) {
+    if (user) {
       router.push("/profile");
     }
   }, [user]);
@@ -85,7 +85,6 @@ const Login = () => {
             }
           }
         } catch (err) {
-          console.log(err);
           setError("Login failed. Please check your credentials.");
         }
       } else {

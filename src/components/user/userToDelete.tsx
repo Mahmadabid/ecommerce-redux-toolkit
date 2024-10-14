@@ -1,8 +1,9 @@
 import { UserFetch } from "@/redux/slices/types";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faTrash, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Load from "../utils/Load";
 import { useDeleteUserMutation } from "@/redux/slices/user";
+import { Role } from "../utils/utils";
 
 interface UserToDeleteProps {
   UserData: UserFetch;
@@ -32,7 +33,7 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
     setTimeout(() => {
       setNotification({
         message: "Deleted Profile",
-        visible: true,
+        visible: false,
         remove: false,
       });
     }, 5000);
@@ -66,6 +67,11 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
 
   return (
     <div className="flex justify-between items-center border border-gray-300 shadow-lg p-4 rounded-md bg-white relative">
+      {UserData.role === Role.seller || UserData.role === Role.admin ? (
+        <div className="inline-flex items-center justify-center p-[6px] mr-2 border rounded-lg shadow-lg button-style transition duration-300">
+          <FontAwesomeIcon icon={UserData.role === Role.admin? faUserTie: faCartShopping} className="text-sm" />
+        </div>
+      ) : null}
       <div className="flex flex-col items-center justify-center flex-1">
         <p className="font-semibold">{UserData.email}</p>
         <p className="text-sm text-gray-500">{UserData.username}</p>
@@ -73,7 +79,9 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
       <button
         onClick={() => handleDelete(UserData.id || "")}
         className="text-[#632B24] ml-4 disabled:text-gray-600 hover:text-[#81342a]"
-        disabled={!UserData.id || deleteUserLoading || isFetching}
+        disabled={
+          UserData.role === Role.admin || deleteUserLoading || isFetching
+        }
       >
         {deleteUserLoading || isFetching ? (
           <Load className="fill-black w-6 h-6" />

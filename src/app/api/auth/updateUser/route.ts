@@ -88,7 +88,6 @@ export async function POST(request: Request) {
         zipcode,
         address,
         country,
-        ok: true,
       },
       { status: 200 }
     );

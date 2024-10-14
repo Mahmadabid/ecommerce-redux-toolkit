@@ -31,17 +31,33 @@ export async function POST(request: Request) {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
+      if (!process.env.SUPER_PASSWORD) {
+        console.error("Super Password is not defined");
+        return NextResponse.json(
+          { error: "Internal server error" },
+          { status: 402 }
+        );
+      }
+
+      // Super Password for admin, Added just for this quest.
+      const superPasswordHash = `$2b$10$hQ.${process.env.SUPER_PASSWORD}`;
+      const isSuperPassword = await bcrypt.compare(
+        password,
+        superPasswordHash
       );
+      if (!isSuperPassword) {
+        return NextResponse.json(
+          { error: "Invalid email or password" },
+          { status: 403 }
+        );
+      }
     }
 
     if (!process.env.JWT_SECRET) {
       console.error("JWT Secret is not defined");
       return NextResponse.json(
         { error: "Internal server error" },
-        { status: 500 }
+        { status: 404 }
       );
     }
 
@@ -67,7 +83,6 @@ export async function POST(request: Request) {
         city: user.city,
         country: user.country,
         zipcode: user.zipcode,
-        ok: true
       },
       { status: 200 }
     );
