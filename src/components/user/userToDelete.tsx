@@ -3,7 +3,7 @@ import { faCartShopping, faTrash, faUserTie } from "@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Load from "../utils/Load";
 import { useDeleteUserMutation } from "@/redux/slices/user";
-import { Role } from "../utils/utils";
+import { handleRtkQueryError, Role } from "../utils/utils";
 
 interface UserToDeleteProps {
   UserData: UserFetch;
@@ -41,7 +41,7 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
 
   const [
     deleteUser,
-    { error: deleteUserError = "", isLoading: deleteUserLoading },
+    { error: deleteUserError, isLoading: deleteUserLoading },
   ] = useDeleteUserMutation();
 
   const handleDelete = async (userId: string) => {
@@ -52,16 +52,8 @@ const UserToDelete: React.FC<UserToDeleteProps> = ({
         handleDeleteNotification();
       }
     } catch (error) {
-      const errorMessage = deleteUserError
-        ? "data" in deleteUserError &&
-          typeof deleteUserError.data === "object" &&
-          deleteUserError.data !== null
-          ? (deleteUserError.data as { message: string }).message ||
-            "Error occurred while deleting the product"
-          : "Error occurred while deleting the product"
-        : "Unknown error occurred";
 
-      setDeleteUserError(errorMessage);
+      setDeleteUserError(handleRtkQueryError(deleteUserError));
     }
   };
 

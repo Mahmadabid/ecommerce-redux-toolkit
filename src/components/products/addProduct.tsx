@@ -3,13 +3,13 @@ import FloatingLabelInput from "../form/FloatingLabelInput";
 import Image from "next/image";
 import { useAddProductsMutation } from "@/redux/slices/product";
 import Load from "../utils/Load";
-import Notification from "./Notification";
+import { handleRtkQueryError } from "../utils/utils";
 
 interface AddProductProps {
   userId: string;
   username: string;
   isFetching: boolean;
-  handleStoreChange: () => void;
+  handleStoreChange: (value: number) => void;
   setNotification: React.Dispatch<
     React.SetStateAction<{
       message: string;
@@ -89,7 +89,7 @@ const AddProduct: React.FC<AddProductProps> = ({
 
       handleAddNotification(formData.name);
 
-      handleStoreChange();
+      handleStoreChange(1);
     }
   };
 
@@ -98,12 +98,7 @@ const AddProduct: React.FC<AddProductProps> = ({
       {ProductError && <p className="text-red-500 my-2">{ProductError}</p>}
       <p className="text-red-500 my-2">
         {addProductError
-          ? "data" in addProductError &&
-            typeof addProductError.data === "object" &&
-            addProductError.data !== null
-            ? (addProductError.data as { message: string }).message ||
-              "Error occurred while updating profile"
-            : "Error occurred while updating profile"
+          ? handleRtkQueryError(addProductError)
           : null}
       </p>
       <form onSubmit={handleFormSubmit}>

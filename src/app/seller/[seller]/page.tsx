@@ -3,6 +3,7 @@
 import PageError from "@/components/utils/pageError";
 import SellerPageClient from "../../../components/products/SellerPageClient";
 import Head from "next/head";
+import { handleRtkQueryError } from "@/components/utils/utils";
 
 async function fetchProducts(sellerName: string) {
   let products = [];
@@ -26,7 +27,7 @@ const SellerPage = async ({ params }: { params: { seller: string } }) => {
   const { seller } = params;
   const { products, error } = await fetchProducts(seller);
 
-  if (error) return <PageError />;
+  if (error) return <PageError messageString={error} />;
 
   return (
     <>

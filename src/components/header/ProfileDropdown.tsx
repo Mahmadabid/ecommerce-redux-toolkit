@@ -78,7 +78,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
       </div>
 
       {showDropdown && (
-        <div className="absolute top-12 left-0 mt-2 bg-white border-gray-200 rounded shadow-lg z-10">
+        <div className="absolute top-12 w-36 left-0 mt-2 bg-white border-gray-200 rounded shadow-lg z-10">
           {loggedOut ? null : (
             <div className="block w-full px-4 py-2 font-medium text-teal-500">
               {email}
@@ -94,6 +94,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
           <Link onClick={handleDropdownToggle} href="/products">
             <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
               Products
+            </h1>
+          </Link>
+          <Link onClick={handleDropdownToggle} href="/order">
+            <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              View Order
             </h1>
           </Link>
           {!loggedOut && (

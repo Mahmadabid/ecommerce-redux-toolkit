@@ -4,6 +4,7 @@ import Notification from "@/components/products/Notification";
 import Product from "@/components/products/Product";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
+import { handleRtkQueryError } from "@/components/utils/utils";
 import { useGetProductsQuery } from "@/redux/slices/product";
 import { useState } from "react";
 
@@ -20,7 +21,7 @@ const ProductDisplay = () => {
   const { data: products = [], error, isLoading } = useGetProductsQuery();
 
   if (isLoading) return <PageLoad />;
-  if (error) return <PageError />;
+  if (error) return <PageError message={handleRtkQueryError(error)} />;
 
   return (
     <div className="text-center">

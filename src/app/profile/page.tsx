@@ -4,13 +4,13 @@ import Notification from "@/components/products/Notification";
 import AddUser from "@/components/user/addUser";
 import AdminSwithcer from "@/components/user/adminSwithcer";
 import DeleteUser from "@/components/user/deleteUser";
+import Purchases from "@/components/user/Purchases";
 import UpdateUser from "@/components/user/updateUser";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
 import PageLogin from "@/components/utils/pageLogin";
-import {
-  useFetchCredentialsQuery,
-} from "@/redux/slices/user";
+import { handleRtkQueryError } from "@/components/utils/utils";
+import { useFetchCredentialsQuery } from "@/redux/slices/user";
 import { RootState } from "@/redux/store";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [profileSwitcher, setProfileSwithcer] = useState(0);
   const [isAddUser, setIsAddUser] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
@@ -32,12 +32,12 @@ const Profile = () => {
 
   const {
     data: Users = [],
-    error: errorUsers = "",
+    error: errorUsers,
     isFetching,
   } = useFetchCredentialsQuery({});
 
-  const handleisAdmin = () => {
-    setIsAdmin((state) => !state);
+  const handleProfileSwitcher = (value: number) => {
+    setProfileSwithcer(value);
   };
 
   const handleisAddUser = () => {
@@ -46,21 +46,25 @@ const Profile = () => {
 
   if (!user) return <PageLogin message="Login to view Profile" />;
   if (isFetching) return <PageLoad />;
-  if (errorUsers) return <PageError />;
+  if (errorUsers) return <PageError message={handleRtkQueryError(errorUsers)} />;
 
   return (
     <div className="text-center flex justify-center items-center flex-col">
       <h1 className="text-4xl my-4 font-bold text-h-color">
-        {isAdmin ? "Admin" : "Profile"}
+        {profileSwitcher === 1
+          ? "Admin"
+          : profileSwitcher === 2
+          ? "Purchases"
+          : "Profile"}
       </h1>
       <AdminSwithcer
         role={user?.role}
-        isAdmin={isAdmin}
-        handleisAdmin={handleisAdmin}
+        profileSwitcher={profileSwitcher}
+        handleProfileSwitcher={handleProfileSwitcher}
         handleisAddUser={handleisAddUser}
         isAddUser={isAddUser}
       />
-      {isAdmin ? (
+      {profileSwitcher === 1 ? (
         isAddUser ? (
           <AddUser setNotification={setNotification} />
         ) : (
@@ -70,9 +74,9 @@ const Profile = () => {
             isFetching={isFetching}
           />
         )
-      ) : (
+      ) : profileSwitcher === 0? (
         <UpdateUser setNotification={setNotification} user={user} />
-      )}
+      ): (<Purchases />)}
       <Notification {...notification} />
     </div>
   );

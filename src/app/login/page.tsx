@@ -5,7 +5,7 @@ import Notification from "@/components/products/Notification";
 import Load from "@/components/utils/Load";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
-import { Role } from "@/components/utils/utils";
+import { handleRtkQueryError, Role } from "@/components/utils/utils";
 import { UserProps } from "@/redux/slices/types";
 import {
   refreshAuthentication,
@@ -133,7 +133,7 @@ const Login = () => {
   };
 
   if (isFetching) return <PageLoad />;
-  if (errorUsers) return <PageError />;
+  if (errorUsers) return <PageError message={handleRtkQueryError(errorUsers)} />;
 
   return (
     <div className="text-center mt-8 max-w-lg mx-auto p-4">
@@ -145,20 +145,10 @@ const Login = () => {
         {(addUserError || logInUserError) && (
           <p className="text-red-500 my-2">
             {addUserError
-              ? "data" in addUserError &&
-                typeof addUserError.data === "object" &&
-                addUserError.data !== null
-                ? (addUserError.data as { message: string }).message ||
-                  "Error occurred while adding user"
-                : "Error occurred while adding user"
+              ? handleRtkQueryError(addUserError)
               : logInUserError
-              ? "data" in logInUserError &&
-                typeof logInUserError.data === "object" &&
-                logInUserError.data !== null
-                ? (logInUserError.data as { message: string }).message ||
-                  "Error occurred while logging in"
-                : "Error occurred while logging in"
-              : "An unknown error occurred."}
+              ? handleRtkQueryError(logInUserError)
+              : null}
           </p>
         )}
         <FloatingLabelInput

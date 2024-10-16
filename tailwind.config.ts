@@ -27,6 +27,7 @@ const config: Config = {
       'xmd': {'max': '650px'},
       'nmd': {'min': '651px'},
       'xxsm': {'min': '300px'},
+      'xxmd': {'max': '420px'},
       'fsm': {'min': '530px'},
       ...defaultTheme.screens
     }

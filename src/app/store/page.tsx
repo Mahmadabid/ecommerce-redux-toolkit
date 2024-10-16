@@ -3,14 +3,13 @@
 import AddProduct from "@/components/products/addProduct";
 import Notification from "@/components/products/Notification";
 import Product from "@/components/products/Product";
+import Sales from "@/components/products/sales";
 import StoreSwithcer from "@/components/products/storeSwithcer";
 import PageError from "@/components/utils/pageError";
 import PageLoad from "@/components/utils/pageLoad";
 import PageLogin from "@/components/utils/pageLogin";
-import { Role } from "@/components/utils/utils";
-import {
-  useGetProductsBySellerQuery,
-} from "@/redux/slices/product";
+import { handleRtkQueryError, Role } from "@/components/utils/utils";
+import { useGetProductsBySellerQuery } from "@/redux/slices/product";
 import { RootState } from "@/redux/store";
 import { faAddressCard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,9 +18,11 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const Page = () => {
-  const [isProduct, setIsProduct] = useState(true);
+  const [storeSwitcher, setStoreSwitcher] = useState(0);
   const { user } = useSelector((state: RootState) => state.auth);
-  const [deleteProductError, setDeleteProductError] = useState<string | null>(null);
+  const [deleteProductError, setDeleteProductError] = useState<string | null>(
+    null
+  );
   const [notification, setNotification] = useState<{
     message: string;
     visible: boolean;
@@ -29,11 +30,11 @@ const Page = () => {
   }>({
     message: "Success",
     visible: false,
-    remove: false
+    remove: false,
   });
 
-  const handleisProduct = () => {
-    setIsProduct((state) => !state);
+  const handleSwitcher = (value: number) => {
+    setStoreSwitcher(value);
   };
 
   const {
@@ -42,7 +43,7 @@ const Page = () => {
     isFetching,
   } = useGetProductsBySellerQuery(user?.username || "");
 
-  if(!user) return <PageLogin message="Login to sell" />;
+  if (!user) return <PageLogin message="Login to sell" />;
 
   if (!(user?.role === Role.seller || user?.role === Role.admin))
     return (
@@ -63,16 +64,17 @@ const Page = () => {
 
   if (isFetching && (user?.role === Role.seller || user?.role === Role.admin))
     return <PageLoad />;
-  if (error) return <PageError />;
+  if (error) return <PageError message={handleRtkQueryError(error)} />;
 
   return (
     <div className="text-center flex justify-center items-center flex-col">
       <h1 className="text-4xl my-4 font-bold text-h-color">Store</h1>
-      <StoreSwithcer isProduct={isProduct} handleisProducts={handleisProduct} />
-      <p className="text-red-500 my-2">
-        {deleteProductError}
-      </p>
-      {isProduct ? (
+      <StoreSwithcer
+        storeSwitcher={storeSwitcher}
+        handleSwitcher={handleSwitcher}
+      />
+      <p className="text-red-500 my-2">{deleteProductError}</p>
+      {storeSwitcher === 0 ? (
         <div className="mt-8 flex flex-wrap justify-center">
           {products.length > 0 ? (
             products.map((product) => (
@@ -94,15 +96,19 @@ const Page = () => {
             </div>
           )}
         </div>
-      ) : (
+      ) : storeSwitcher === 1 ? (
         <div>
           <AddProduct
             userId={user?.id}
             username={user?.username}
             isFetching={isFetching}
-            handleStoreChange={handleisProduct}
+            handleStoreChange={handleSwitcher}
             setNotification={setNotification}
           />
+        </div>
+      ) : (
+        <div>
+          <Sales />
         </div>
       )}
       <Notification {...notification} />

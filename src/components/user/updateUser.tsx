@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FloatingLabelInput from "../form/FloatingLabelInput";
 import Load from "../utils/Load";
-import { Role } from "../utils/utils";
+import { handleRtkQueryError, Role } from "../utils/utils";
 import { useUpdateUserMutation } from "@/redux/slices/user";
 import { UserType } from "@/redux/slices/types";
 
@@ -79,7 +79,7 @@ const UpdateUser: React.FC<UpdateProps> = ({
 
   const [
     updateUser,
-    { error: updateUserError = "", isLoading: updateUserLoading },
+    { error: updateUserError, isLoading: updateUserLoading },
   ] = useUpdateUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -122,12 +122,7 @@ const UpdateUser: React.FC<UpdateProps> = ({
       {error && <p className="text-red-500 my-2">{error}</p>}
       <p className="text-red-500 my-2">
         {updateUserError
-          ? "data" in updateUserError &&
-            typeof updateUserError.data === "object" &&
-            updateUserError.data !== null
-            ? (updateUserError.data as { message: string }).message ||
-              "Error occurred while updating profile"
-            : "Error occurred while updating profile"
+          ? handleRtkQueryError(updateUserError)
           : null}
       </p>
       <div className="grid grid-cols-1 fsm:grid-cols-2 mt-6 mx-auto gap-4 gap-x-16">

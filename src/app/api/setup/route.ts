@@ -33,6 +33,73 @@ export async function GET(req: Request) {
       );
     `);
 
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS orders_table (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        buyer STRING NOT NULL,
+        buyerId STRING,
+        email STRING NOT NULL,
+        name STRING,
+        city STRING,
+        zipcode STRING,
+        address STRING,
+        country STRING,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS order_items (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        orderId UUID REFERENCES orders_table(id) ON DELETE CASCADE,
+        productId UUID,
+        productName STRING,
+        productPrice DECIMAL(10, 2),
+        productQuantity INT,
+        productSeller STRING,
+        buyer STRING NOT NULL,
+        buyerId STRING NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
+    const user = {
+      username: "admin",
+      email: "admin@a.c",
+      password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+      role: "admin",
+      name: "Admin",
+      city: "Miami",
+      zipcode: "33101",
+      address: "654 Ocean Dr",
+      country: "USA",
+    };
+
+    const {
+      username,
+      email,
+      password,
+      role,
+      name,
+      city,
+      zipcode,
+      address,
+      country,
+    } = user;
+
+    const existingUser = await client.query(
+      `SELECT 1 FROM users_table WHERE email = $1 OR username = $2`,
+      [email, username]
+    );
+
+    if (existingUser.rowCount === 0) {
+      await client.query(
+        `
+        INSERT INTO users_table (username, email, password, role, name, city, zipcode, address, country)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      `,
+        [username, email, password, role, name, city, zipcode, address, country]
+      );
+    }
+
     if (dummy) {
       await client.query(`
       INSERT INTO products_table (name, price, img, seller, quantity) VALUES
@@ -46,7 +113,8 @@ export async function GET(req: Request) {
         {
           username: "fruit-vendor",
           email: "fr@example.com",
-          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          password:
+            "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
           role: "seller",
           name: "Fruit",
           city: "New York",
@@ -57,7 +125,8 @@ export async function GET(req: Request) {
         {
           username: "bakery",
           email: "jane@example.com",
-          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          password:
+            "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
           role: "seller",
           name: "bakery",
           city: "Los Angeles",
@@ -68,7 +137,8 @@ export async function GET(req: Request) {
         {
           username: "buyer_bob",
           email: "bob@example.com",
-          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          password:
+            "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
           role: "buyer",
           name: "Bob Buyer",
           city: "Houston",
@@ -79,7 +149,8 @@ export async function GET(req: Request) {
         {
           username: "seller_susan",
           email: "susan@example.com",
-          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          password:
+            "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
           role: "buyer",
           name: "Susan Seller",
           city: "Miami",
@@ -90,7 +161,8 @@ export async function GET(req: Request) {
         {
           username: "admin",
           email: "admin@a.c",
-          password: "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
+          password:
+            "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",
           role: "admin",
           name: "Admin",
           city: "Miami",

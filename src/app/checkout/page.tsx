@@ -4,12 +4,17 @@ import FloatingLabelInput from "@/components/form/FloatingLabelInput";
 import ShippingForm from "@/components/form/ShippingForm";
 import Stepper from "@/components/form/Stepper";
 import { Step } from "@/components/form/type";
-import { RootState } from "@/redux/store";
+import Load from "@/components/utils/Load";
+import { generateRandomId, handleRtkQueryError } from "@/components/utils/utils";
+import { clearCart } from "@/redux/slices/cart";
+import { useCreateOrderMutation } from "@/redux/slices/order";
+import { useGetProductsQuery } from "@/redux/slices/product";
+import { AppDispatch, RootState } from "@/redux/store";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Checkout = () => {
   const [email, setEmail] = useState("");
@@ -42,11 +47,19 @@ const Checkout = () => {
   }, [user]);
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch: AppDispatch = useDispatch();
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+  const [
+    createOrder,
+    { error: createOrderError = "", isLoading: createOrderLoading },
+  ] = useCreateOrderMutation();
+
+  const { isFetching, refetch: refetchProducts } = useGetProductsQuery();
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -73,10 +86,40 @@ const Checkout = () => {
     handleNext();
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("submit");
+    const orderData = {
+      id: generateRandomId(),
+      email: shippingEmail || email,
+      name: fullName,
+      address,
+      city,
+      zipcode: zipCode,
+      country,
+      buyer: user?.username || null,
+      buyerId: user?.id || null,
+      products: cartItems.map((item) => ({
+        productId: item.id,
+        productName: item.name,
+        productQuantity: item.quantity,
+        productPrice: item.price,
+        productSeller: item.seller,
+        buyer: user?.username || null,
+        buyerId: user?.id || null,
+      })),
+    };
+
+    try {
+      await createOrder(orderData).unwrap();
+      await refetchProducts();
+      dispatch(clearCart());
+      window.location.href = `/order?orderId=${orderData.id}`;
+      alert("Order placed successfully!");
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      alert("There was an error placing your order. Please try again.");
+    }
   };
 
   return (
@@ -84,6 +127,9 @@ const Checkout = () => {
       <h1 className="text-3xl font-bold text-center text-h-color mt-6 mb-6">
         Checkout
       </h1>
+      {createOrderError
+          ? handleRtkQueryError(createOrderError)
+          : null}
       {cartItems.length > 0 ? (
         <>
           {/* Cart Items Section */}
@@ -204,9 +250,10 @@ const Checkout = () => {
                   </button>
                   <button
                     type="submit"
+                    disabled={createOrderLoading || isFetching}
                     className="button-style font-semibold px-3 py-2 rounded"
                   >
-                    Complete Purchase
+                    {createOrderLoading || isFetching ? <Load /> : "Complete Purchase"}
                   </button>
                 </div>
               </form>

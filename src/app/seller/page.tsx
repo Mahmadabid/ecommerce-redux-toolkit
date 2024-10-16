@@ -10,6 +10,7 @@ import PageLoad from "@/components/utils/pageLoad";
 import PageError from "@/components/utils/pageError";
 import Link from "next/link";
 import Notification from "@/components/products/Notification";
+import { handleRtkQueryError } from "@/components/utils/utils";
 
 const SellerPage = () => {
   const searchParams = useSearchParams();
@@ -33,7 +34,7 @@ const SellerPage = () => {
   } = useGetProductsBySellerQuery(seller);
 
   if (isLoading) return <PageLoad />;
-  if (error) return <PageError />;
+  if (error) return <PageError message={handleRtkQueryError(error)} />;
 
   return (
     <div className="text-center">

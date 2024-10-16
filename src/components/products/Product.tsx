@@ -10,6 +10,7 @@ import { addToCart } from "@/redux/slices/cart";
 import React, { useEffect, useState } from "react";
 import Load from "../utils/Load";
 import { useDeleteProductMutation } from "@/redux/slices/product";
+import { handleRtkQueryError } from "../utils/utils";
 
 interface ProductProps {
   id: string;
@@ -51,7 +52,7 @@ const Product: React.FC<ProductProps> = ({
 
   const [
     deleteProductData,
-    { isLoading: deleteProductLoading, error: deleteProductError = "" },
+    { isLoading: deleteProductLoading, error: deleteProductError },
   ] = useDeleteProductMutation();
 
   const handleNotification = (itemName: string) => {
@@ -91,16 +92,8 @@ const Product: React.FC<ProductProps> = ({
           handleNotification("");
         }
       } catch (error) {
-        const errorMessage = deleteProductError
-          ? "data" in deleteProductError &&
-            typeof deleteProductError.data === "object" &&
-            deleteProductError.data !== null
-            ? (deleteProductError.data as { message: string }).message ||
-              "Error occurred while deleting the product"
-            : "Error occurred while deleting the product"
-          : "Unknown error occurred";
 
-        setDeleteProductError(errorMessage);
+        setDeleteProductError(handleRtkQueryError(deleteProductError));
       }
     }
   };
@@ -112,7 +105,7 @@ const Product: React.FC<ProductProps> = ({
       const itemToAdd = {
         id,
         name,
-        price,
+        price: Number(price),
         img,
         seller,
         quantity: productQuantity + 1,

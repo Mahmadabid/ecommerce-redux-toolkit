@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FloatingLabelInput from "../form/FloatingLabelInput";
 import Load from "../utils/Load";
-import { Role } from "../utils/utils";
+import { handleRtkQueryError, Role } from "../utils/utils";
 import {
   useAddUserMutation,
   useFetchCredentialsQuery,
@@ -99,12 +99,7 @@ const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
       <form onSubmit={handleSubmit} className="mt-6">
         {error && <p className="text-red-500 my-2">{error}</p>}
         {addUserError
-          ? "data" in addUserError &&
-            typeof addUserError.data === "object" &&
-            addUserError.data !== null
-            ? (addUserError.data as { message: string }).message ||
-              "Error occurred while updating profile"
-            : "Error occurred while updating profile"
+          ? handleRtkQueryError(addUserError)
           : null}
         <FloatingLabelInput
           label="Email"
