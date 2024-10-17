@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserProps } from "@/redux/slices/types";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   const client = await pool.connect();
 

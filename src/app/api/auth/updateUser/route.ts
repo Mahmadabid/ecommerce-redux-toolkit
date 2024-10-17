@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { DecodedTokenReturn, jwtVerification } from "@/components/user/auth";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   const client = await pool.connect();
   try {

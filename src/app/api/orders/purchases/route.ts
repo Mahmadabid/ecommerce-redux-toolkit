@@ -2,6 +2,8 @@ import { jwtVerification, DecodedTokenReturn } from "@/components/user/auth";
 import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   const authHeader = request.headers.get("Authorization");
   const verificationResult = jwtVerification(authHeader);

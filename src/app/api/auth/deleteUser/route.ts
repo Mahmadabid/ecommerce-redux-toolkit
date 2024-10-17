@@ -2,6 +2,8 @@ import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
 import { jwtVerification, DecodedTokenReturn } from "@/components/user/auth";
 
+export const dynamic = 'force-dynamic';
+
 export async function DELETE(request: Request) {
   const client = await pool.connect();
 

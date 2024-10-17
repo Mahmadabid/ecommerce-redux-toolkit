@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { Role } from "@/components/utils/utils";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   const client = await pool.connect();
 

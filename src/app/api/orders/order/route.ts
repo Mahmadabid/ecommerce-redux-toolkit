@@ -1,6 +1,8 @@
 import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export interface PRODUCT {
   productid: string;
   productname: string;
