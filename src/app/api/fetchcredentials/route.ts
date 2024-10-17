@@ -1,6 +1,8 @@
 import pool from "@/components/utils/db";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const client = await pool.connect();
   try {
