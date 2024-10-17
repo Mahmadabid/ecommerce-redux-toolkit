@@ -50,11 +50,15 @@ DATABASE_URL='Add_cockroachdb_database_url_here'
 npm run dev
 ```
 
-Visit http://localhost:3000 in your browser to see the app.
+- Setup Database (SQL Tables) and Create Admin:
 
 Visit ```http://localhost:3000/api/setup``` to setup your database and create admin user
 
+- Setup Dummy Data, Database (SQL Tables) and Create Admin:
+
 Visit ```http://localhost:3000/api/setup?dummy=dummy``` to setup your database, create all users including admin and pre add products.
+
+Visit http://localhost:3000 in your browser to see the app.
 
 ## Features
 ### Product Management:
@@ -84,6 +88,12 @@ For admin a super password of `123` is created for thsi project.
 **Seller:** List and manage products for sale.
 
 **Buyer:** Purchase products and view order history.
+
+**Technologies Used**
+- Next.js 13: Server-side rendering and API routes.
+- CockroachDB: Distributed SQL database.
+- Node.js: Backend logic.
+- Bcrypt: For password hashing.
 
 ## API Documentation
 Pixel Market includes various API routes for managing products, users, and orders. Heres a quick overview of the main API endpoints:
@@ -115,9 +125,3 @@ Pixel Market includes various API routes for managing products, users, and order
 [POST /api/auth/updateUser](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/auth/updateUser/route.ts): Used to update password, role and other values of a user. All roles can access this.
 
 [POST /api/auth/deleteUser](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/auth/deleteUser/route.ts): Used to delete users, can only be done by Admin.
-
-**Technologies Used**
-- Next.js 13: Server-side rendering and API routes.
-- CockroachDB: Distributed SQL database.
-- Node.js: Backend logic.
-- Bcrypt: For password hashing.
