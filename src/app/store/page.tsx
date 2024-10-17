@@ -53,7 +53,7 @@ const Page = () => {
           You need to be a seller to open a store, Update your profile.
         </p>
         <Link
-          href="/products"
+          href="/profile"
           className="px-4 mt-4 py-2 rounded-lg font-semibold button-style"
         >
           Profile &nbsp;
