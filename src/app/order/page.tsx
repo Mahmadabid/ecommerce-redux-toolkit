@@ -145,7 +145,7 @@ const Order = () => {
     return (
       <div className="flex justify-center items-center">
         <form
-          className="px-2 flex flex-col justify-center items-center"
+          className="px-2 w-full max-w-lg flex flex-col justify-center items-center"
           onSubmit={handleSubmit}
         >
           <h1 className="text-3xl font-bold mt-9 mb-8 text-h-color text-center">
@@ -156,7 +156,7 @@ const Order = () => {
             required
             value={searchId}
             onChange={setSearchId}
-            classname="w-96"
+            classname="w-full max-w-[350px]"
           />
           <p className="text-red-500 font-medium my-2">{error}</p>
           <button
