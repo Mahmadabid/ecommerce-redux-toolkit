@@ -86,7 +86,7 @@ export async function GET(request: Request) {
       if (ordersResult.rows.length === 0) {
         return NextResponse.json(
           { error: "Order not found" },
-          { status: 404 }
+          { status: 408 }
         );
       }
 

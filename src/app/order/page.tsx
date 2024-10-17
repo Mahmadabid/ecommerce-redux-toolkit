@@ -13,7 +13,7 @@ import { formatDate, handleRtkQueryError } from "@/components/utils/utils";
 const Order = () => {
   const searchParams = useSearchParams();
 
-  const orderId = searchParams.get("orderId") || "";
+  const orderId = searchParams.get("orderId");
 
   const [searchId, setSearchId] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +23,8 @@ const Order = () => {
     error: orderFetchError,
     isFetching,
     isLoading,
-  } = useFetchOrdersQuery(orderId && { orderId });
+    refetch,
+  } = useFetchOrdersQuery(orderId ? { orderId } : {});
 
   if (orderId) {
     if (isLoading) return <PageLoad />;
@@ -128,19 +129,30 @@ const Order = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const foundOrder = order.find(
-        (order: { id: string }) => order.id === searchId
-      );
-      if (foundOrder) {
-        window.location.href = `/order?orderId=${searchId}`;
-      } else {
-        setError("Not found");
+      const { data: Orders } = await refetch();
+
+      try {
+        const foundOrder = Orders.find(
+          (order: { id: string }) => order.id === searchId
+        );
+        if (foundOrder) {
+          window.location.href = `/order?orderId=${searchId}`;
+        } else {
+          setError("Not found");
+          return;
+        }
+      } catch (_) {
+        setError("Not Found");
       }
     };
 
     if (isFetching) return <PageLoad />;
     if (orderFetchError)
-      return <PageError message={handleRtkQueryError(orderFetchError)} />;
+      if ("status" in orderFetchError) {
+        if (orderFetchError.status !== 408) {
+          return <PageError message={handleRtkQueryError(orderFetchError)} />;
+        }
+      }
 
     return (
       <div className="flex justify-center items-center">
