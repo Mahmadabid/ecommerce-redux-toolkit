@@ -34,6 +34,7 @@ const Profile = () => {
     data: Users = [],
     error: errorUsers,
     isFetching,
+    isLoading
   } = useFetchCredentialsQuery({});
 
   const handleProfileSwitcher = (value: number) => {
@@ -45,7 +46,7 @@ const Profile = () => {
   };
 
   if (!user) return <PageLogin message="Login to view Profile" />;
-  if (isFetching) return <PageLoad />;
+  if (isLoading) return <PageLoad />;
   if (errorUsers) return <PageError message={handleRtkQueryError(errorUsers)} />;
 
   return (
@@ -66,7 +67,7 @@ const Profile = () => {
       />
       {profileSwitcher === 1 ? (
         isAddUser ? (
-          <AddUser setNotification={setNotification} />
+          <AddUser setNotification={setNotification} handleIsAddUser={handleisAddUser} />
         ) : (
           <DeleteUser
             Users={Users}

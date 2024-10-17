@@ -30,6 +30,7 @@ const UpdateUser: React.FC<UpdateProps> = ({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [role, setRole] = useState(Role.buyer);
+  const [change, setChange] = useState(false);
   const [initialUserData, setInitialUserData] = useState({
     name: "",
     address: "",
@@ -60,7 +61,7 @@ const UpdateUser: React.FC<UpdateProps> = ({
       setZipcode(user.zipcode);
       setRole(user.role);
     }
-  }, [user]);
+  }, [user, change]);
 
   const handleUpdateNotification = () => {
     setNotification({
@@ -99,7 +100,7 @@ const UpdateUser: React.FC<UpdateProps> = ({
         return;
       }
 
-      await updateUser({
+      const {error: updateUserFinalError} = await updateUser({
         name,
         address,
         city,
@@ -109,8 +110,9 @@ const UpdateUser: React.FC<UpdateProps> = ({
         role,
       });
 
-      if (!updateUserError) {
+      if (!updateUserFinalError) {
         handleUpdateNotification();
+        setChange(state => !state)
       }
     } catch (error) {
       setError(error as string);

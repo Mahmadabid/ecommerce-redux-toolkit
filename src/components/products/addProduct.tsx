@@ -34,11 +34,11 @@ const AddProduct: React.FC<AddProductProps> = ({
   });
   const [ProductError, setproductError] = useState<string | null>(null);
 
-  const handleAddNotification = (itemName: string) => {
+  const handleAddNotification = (itemName: string, remove: boolean, error?: string) => {
     setNotification({
-      message: `${itemName} Added Product`,
+      message: remove ? `Couldn't Add ${itemName}, ${error}` : `${itemName} Added Product`,
       visible: true,
-      remove: false,
+      remove: remove ? true : false,
     });
     setTimeout(() => {
       setNotification({
@@ -49,10 +49,8 @@ const AddProduct: React.FC<AddProductProps> = ({
     }, 5000);
   };
 
-  const [
-    addProduct,
-    { isLoading: addProductoading, error: addProductError },
-  ] = useAddProductsMutation();
+  const [addProduct, { isLoading: addProductoading, error: addProductError }] =
+    useAddProductsMutation();
 
   const handleChange = (field: keyof typeof formData, value: string) => {
     setFormData((state) => ({
@@ -76,7 +74,7 @@ const AddProduct: React.FC<AddProductProps> = ({
       return;
     }
 
-    await addProduct({
+    const { error } = await addProduct({
       seller: username,
       img: formData.img,
       name: formData.name,
@@ -85,11 +83,12 @@ const AddProduct: React.FC<AddProductProps> = ({
       userId,
     });
 
-    if (!addProductError) {
-
-      handleAddNotification(formData.name);
+    if (!error) {
+      handleAddNotification(formData.name, false);
 
       handleStoreChange(1);
+    } else {
+      handleAddNotification(formData.name, true, handleRtkQueryError(error));
     }
   };
 
@@ -97,9 +96,7 @@ const AddProduct: React.FC<AddProductProps> = ({
     <div className="mt-6">
       {ProductError && <p className="text-red-500 my-2">{ProductError}</p>}
       <p className="text-red-500 my-2">
-        {addProductError
-          ? handleRtkQueryError(addProductError)
-          : null}
+        {addProductError ? handleRtkQueryError(addProductError) : null}
       </p>
       <form onSubmit={handleFormSubmit}>
         <FloatingLabelInput

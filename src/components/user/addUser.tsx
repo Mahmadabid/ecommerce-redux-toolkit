@@ -16,21 +16,24 @@ interface AddUserProps {
       remove: boolean;
     }>
   >;
+  handleIsAddUser: () => void;
 }
 
-const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
+const AddUser: React.FC<AddUserProps> = ({
+  setNotification,
+  handleIsAddUser,
+}) => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState(Role.buyer);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleUpdateNotification = () => {
+  const handleAddNotification = (remove?: boolean) => {
     setNotification({
-      message: `Added Profile`,
+      message: remove ? "Failed to Add Profile" : `Added Profile`,
       visible: true,
-      remove: false,
+      remove: remove ? true : false,
     });
     setTimeout(() => {
       setNotification({
@@ -41,16 +44,15 @@ const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
     }, 5000);
   };
 
-  const { refetch } = useFetchCredentialsQuery({});
+  const { refetch, isFetching } = useFetchCredentialsQuery({});
 
-  const [addUser, { error: addUserError = "" }] =
-    useAddUserMutation();
+  const [addUser, { error: addUserError, isLoading }] = useAddUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setError(null);
-      setLoading(true);
+
       const { data: refetchedUsers = [], error: refetchError } =
         await refetch();
 
@@ -68,10 +70,12 @@ const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
 
       if (emailExists) {
         setError("Email is already registered. Please use another.");
+        return;
       } else if (userNameExists) {
         setError("Username is already taken. Please choose another.");
+        return;
       } else {
-        await addUser({
+        const { error: addUsersError } = await addUser({
           username: userName,
           email,
           password,
@@ -82,25 +86,25 @@ const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
           address: "",
           country: "",
         });
-        if (!addUserError) {
+
+        if (addUsersError) {
+          handleAddNotification(true);
+        } else {
           await refetch();
-          handleUpdateNotification();
+          handleAddNotification();
+          handleIsAddUser();
         }
       }
     } catch (error) {
       setError(error as string);
-    } finally {
-        setLoading(false);
     }
   };
 
   return (
     <>
       <form onSubmit={handleSubmit} className="mt-6">
-        {error && <p className="text-red-500 my-2">{error}</p>}
-        {addUserError
-          ? handleRtkQueryError(addUserError)
-          : null}
+        {error && <p className="text-red-500 my-2">{error}hi</p>}
+        {addUserError ? handleRtkQueryError(addUserError) : null}
         <FloatingLabelInput
           label="Email"
           required
@@ -140,10 +144,10 @@ const AddUser: React.FC<AddUserProps> = ({setNotification}) => {
         </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={isFetching || isLoading}
           className="py-2 px-3 mt-3 rounded-lg font-semibold button-style disabled:bg-gray-600"
         >
-          {loading ? <Load /> : "Add User"}
+          {isFetching || isLoading ? <Load /> : "Add User"}
         </button>
       </form>
     </>

@@ -5,8 +5,13 @@ import ShippingForm from "@/components/form/ShippingForm";
 import Stepper from "@/components/form/Stepper";
 import { Step } from "@/components/form/type";
 import Load from "@/components/utils/Load";
-import { generateRandomId, handleRtkQueryError } from "@/components/utils/utils";
-import { clearCart } from "@/redux/slices/cart";
+import PageError from "@/components/utils/pageError";
+import PageLoad from "@/components/utils/pageLoad";
+import {
+  generateRandomId,
+  handleRtkQueryError,
+} from "@/components/utils/utils";
+import { addToCart, clearCart } from "@/redux/slices/cart";
 import { useCreateOrderMutation } from "@/redux/slices/order";
 import { useGetProductsQuery } from "@/redux/slices/product";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -34,6 +39,14 @@ const Checkout = () => {
   const [zipCode, setZipCode] = useState("");
   const { user } = useSelector((state: RootState) => state.auth);
 
+  const {
+    data: products = [],
+    error: productError,
+    isLoading,
+    isFetching,
+    refetch: refetchProducts,
+  } = useGetProductsQuery();
+
   useEffect(() => {
     if (user) {
       setEmail(user.email);
@@ -49,6 +62,29 @@ const Checkout = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const dispatch: AppDispatch = useDispatch();
 
+  useEffect(() => {
+    const validateCartItems = async () => {
+      const updatedCartItems = cartItems.filter((item) => {
+        const product = products.find((p) => p.id === item.id);
+        return product && product.quantity >= item.quantity;
+      });
+
+      if (updatedCartItems.length !== cartItems.length) {
+        alert(
+          "Some items in your cart are no longer available. They will be removed."
+        );
+        dispatch(clearCart());
+        updatedCartItems.forEach((item) => {
+          dispatch(addToCart(item));
+        });
+      }
+    };
+
+    if (!isFetching) {
+      validateCartItems();
+    }
+  }, [cartItems, products, isFetching]);
+
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
@@ -58,8 +94,6 @@ const Checkout = () => {
     createOrder,
     { error: createOrderError = "", isLoading: createOrderLoading },
   ] = useCreateOrderMutation();
-
-  const { isFetching, refetch: refetchProducts } = useGetProductsQuery();
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -122,14 +156,15 @@ const Checkout = () => {
     }
   };
 
+  if (isLoading) return <PageLoad />
+  if (productError) return <PageError message={handleRtkQueryError(productError)} />
+  
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-3xl font-bold text-center text-h-color mt-6 mb-6">
         Checkout
       </h1>
-      {createOrderError
-          ? handleRtkQueryError(createOrderError)
-          : null}
+      {createOrderError ? handleRtkQueryError(createOrderError) : null}
       {cartItems.length > 0 ? (
         <>
           {/* Cart Items Section */}
@@ -253,7 +288,11 @@ const Checkout = () => {
                     disabled={createOrderLoading || isFetching}
                     className="button-style font-semibold px-3 py-2 rounded"
                   >
-                    {createOrderLoading || isFetching ? <Load /> : "Complete Purchase"}
+                    {createOrderLoading || isFetching ? (
+                      <Load />
+                    ) : (
+                      "Complete Purchase"
+                    )}
                   </button>
                 </div>
               </form>
