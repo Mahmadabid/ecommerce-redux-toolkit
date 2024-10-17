@@ -85,14 +85,37 @@ For admin a super password of `123` is created for thsi project.
 
 **Buyer:** Purchase products and view order history.
 
-API Documentation
-Pixel Market includes various API routes for managing products, users, and orders. Here’s a quick overview of the main API endpoints:
+## API Documentation
+Pixel Market includes various API routes for managing products, users, and orders. Heres a quick overview of the main API endpoints:
 
-GET /api/products: Fetch all products.
-POST /api/products: Add a new product (requires seller role).
-GET /api/orders: Retrieve order history.
-POST /api/orders: Create a new order.
-GET /api/users: List users (admin only).
+[GET /api/products/fetch](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/products/fetch/route.ts// "GET /api/products"): Fetches all products or products by a seller(requires seller Id).
+
+[POST /api/products/addProducts](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/products/addProducts/route.tsp:// "POST /api/products/addProducts"): Adds a new product (requires seller or admin role).
+
+[POST /api/products/deleteProduct](http://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/products/deleteProduct/route.ts "POST /api/products/deleteProduct"): Deletes a product (requires seller or admin role).
+
+[POST /api/orders/createOrder](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/orders/createOrder/route.ts/ "GET /api/orders/createOrder"): Creates Order.
+
+[GET /api/orders/order](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/orders/order/route.ts "GET /api/orders"): Fetches specific order (requires order Id) or fetches Id of all orders to use in search function.
+
+[GET /api/orders/purchases](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/orders/purchases/route.ts "POST /api/orders/purchases"): Fetches Purchases of a particullar buyer (requires jwt token)
+
+[GET /api/orders/sales](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/orders/sales/route.ts "POST /api/orders/sales"): Fetches Sales of a particullar seller (requires jwt token)
+
+[GET /api/fetchcredentials](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/fetchcredentials/route.ts "GET /api/fetchCredentials"): Fetches username, email for validation on signup.
+
+[GET /api/setup](http://localhost:3000/api/setup "GET /api/setup"): Setups cockroachdb with tables and admin user.
+
+[GET /api/setup?dummy=dummy:](http://localhost:3000/api/setup?dummy=dummy "GET /api/setup?dummy=dummy"): Setups cockroachdb with tables and all users and dummy products.
+
+[POST /api/auth/login](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/auth/login/route.ts "POST /api/auth/login"): Used to Login data, validate email and password and to create JWT.
+
+[POST /api/auth/addUser](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/auth/addUser/route.ts "POST /api/auth/addUser"): Used to create user, can be created by admin also. Requires role, username and email.
+
+[POST /api/auth/updateUser](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/auth/updateUser/route.ts "POST /api/auth/updateUser"): Used to update password, role and other values of a user. All roles can access this.
+
+[POST /api/auth/deleteUser](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/api/auth/deleteUser/route.ts "POST /api/auth/deleteUser"): Used to delete users, can only be done by Admin.
+
 Technologies Used
 Next.js 13: Server-side rendering and API routes.
 CockroachDB: Distributed SQL database.
