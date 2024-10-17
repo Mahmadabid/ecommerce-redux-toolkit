@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pixel Market
+Pixel Market is an e-commerce platform that allows users to create, sell, and buy products. It provides functionality to track purchases and sales, and includes an admin panel for managing users.
 
-## Getting Started
+## Installation
+To run the project locally, follow these steps:
 
-First, run the development server:
+Clone the repository:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+`git clone https://github.com/yourusername/pixel-market.git`
+
+Navigate to the project directory:
+
+`cd pixel-market`
+
+Install dependencies:
+
+`npm install`
+
+Set up the database:
+
+Ensure you have CockroachDB set up and running.
+Update the database connection details in the project’s environment file.
+Run the development server:
+
+`npm run dev`
+
+Visit http://localhost:3000 in your browser to see the app.
+
+## Features
+### Product Management:
+
+Sellers can create and sell products.
+Buyers can browse and purchase products.
+
+### Sales Tracking:
+
+Track orders and sales in real-time.
+Order history is available for both buyers and sellers.
+
+### User Management:
+
+Admins can manage users, including sellers and buyers.
+User roles include admin, seller, and buyer.
+
+### Roles
+
+**Admin:** Manage users and oversee the platform. To use admin use these credentials.
 ```
+email: admin@a.c
+password: 123
+```
+For admin a super password of `123` is created for thsi project.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Seller:** List and manage products for sale.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Buyer:** Purchase products and view order history.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+API Documentation
+Pixel Market includes various API routes for managing products, users, and orders. Here’s a quick overview of the main API endpoints:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+GET /api/products: Fetch all products.
+POST /api/products: Add a new product (requires seller role).
+GET /api/orders: Retrieve order history.
+POST /api/orders: Create a new order.
+GET /api/users: List users (admin only).
+Technologies Used
+Next.js 13: Server-side rendering and API routes.
+CockroachDB: Distributed SQL database.
+Node.js: Backend logic.
+Bcrypt: For password hashing.
