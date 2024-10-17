@@ -2,7 +2,7 @@
 Pixel Market is an e-commerce platform that allows users to create, sell, and buy products. It provides functionality to track purchases and sales, and includes an admin panel for managing users.
 
 ## Installation
-To run the project locally, follow these steps:
+To run the project locally, follow all of these steps:
 
 - Clone the repository:
 
