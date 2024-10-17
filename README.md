@@ -7,7 +7,7 @@ To run the project locally, follow these steps:
 - Clone the repository:
 
 ``` ruby
-git clone https://github.com/yourusername/pixel-market.git
+git clone https://github.com/Mahmadabid/ecommerce-redux-toolkit/
 ```
 
 - Navigate to the project directory:
@@ -85,13 +85,12 @@ User roles include admin, seller, and buyer.
 email: admin@a.c
 password: 123
 ```
-For admin a super password of `123` is created for thsi project.
+For admin a super password of `123` is created for this project.
 
 **Seller:** List and manage products for sale.
 
 **Buyer:** Purchase products and view order history.
 
-**Technologies Used**
 ### Technologies Used
 - **Next.js 13**: For server-side rendering, static site generation, and API routes.
 - **CockroachDB**: A distributed SQL database that handles the persistence of data.
