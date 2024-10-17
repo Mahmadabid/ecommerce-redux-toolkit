@@ -6,15 +6,21 @@ To run the project locally, follow these steps:
 
 - Clone the repository:
 
-`git clone https://github.com/yourusername/pixel-market.git`
+``` ruby
+git clone https://github.com/yourusername/pixel-market.git
+```
 
 - Navigate to the project directory:
 
-`cd pixel-market`
+``` ruby
+cd pixel-market
+```
 
 - Install dependencies:
 
-`npm install`
+``` ruby
+npm install
+```
 
 - Set up the database:
 
@@ -22,7 +28,7 @@ Ensure you have CockroachDB set up and running.
 
 - Update the projects environment file.
 
-```
+``` ruby
 # NEXT_PUBLIC_API_BASE_URL='https://pixel-marketplace-redux.vercel.app/api/'
 NEXT_PUBLIC_API_BASE_URL='http://localhost:3000/api/'
 JWT_SECRET='Add_your_Jwt_here'
@@ -36,7 +42,9 @@ DATABASE_URL='Add_cockroachdb_database_url_here'
 
 - Run the development server:
 
-`npm run dev`
+``` ruby
+npm run dev
+```
 
 Visit http://localhost:3000 in your browser to see the app.
 
