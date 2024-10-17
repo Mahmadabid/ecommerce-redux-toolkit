@@ -27,6 +27,7 @@ npm install
 Ensure you have CockroachDB set up and running.
 
 Visit [Website](https://cockroachlabs.cloud/get-started)
+
 https://github.com/user-attachments/assets/e8d9455d-91aa-4eaf-965d-1f45462c6c93
 
 - Update the projects environment file.
@@ -51,9 +52,9 @@ npm run dev
 
 Visit http://localhost:3000 in your browser to see the app.
 
-Visit `http://localhost:3000/api/setup` to setup your database and create admin user
+Visit ```http://localhost:3000/api/setup``` to setup your database and create admin user
 
-Visit `http://localhost:3000/api/setup?dummy=dummy` to setup your database, create all users including admin and pre add products.
+Visit ```http://localhost:3000/api/setup?dummy=dummy``` to setup your database, create all users including admin and pre add products.
 
 ## Features
 ### Product Management:
