@@ -55,6 +55,7 @@ npm run dev
 Visit ```http://localhost:3000/api/setup``` to setup your database and create admin user
 
 <br/>
+
 - Setup Dummy Data, Database (SQL Tables) and Create Admin:
 
 Visit ```http://localhost:3000/api/setup?dummy=dummy``` to setup your database, create all users including admin and pre add products.
