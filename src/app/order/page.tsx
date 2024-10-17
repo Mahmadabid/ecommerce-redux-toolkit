@@ -153,7 +153,7 @@ const Order = () => {
             disabled={isFetching}
             className="button-style font-semibold px-3 py-2 rounded"
           >
-            {isFetching ? <Load /> : "Complete Purchase"}
+            {isFetching ? <Load /> : "Search"}
           </button>
         </form>
       </div>
