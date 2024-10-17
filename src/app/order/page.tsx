@@ -32,14 +32,19 @@ const Order = () => {
       return <PageError message={handleRtkQueryError(orderFetchError)} />;
 
     const handleSearch = () => {
-      window.location.href = '/order';
-    }
+      window.location.href = "/order";
+    };
 
     return (
       <div className="max-w-3xl mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
-        <button onClick={handleSearch} className="button-style font-semibold px-3 py-2 rounded my-4">
-          Search Orders
-        </button>
+        <div className="flex justify-center items-center">
+          <button
+            onClick={handleSearch}
+            className="button-style font-semibold px-3 py-2 rounded my-4"
+          >
+            Search Orders
+          </button>
+        </div>
         <h1 className="text-3xl font-bold mb-8 text-h-color text-center">
           Order Summary
         </h1>
