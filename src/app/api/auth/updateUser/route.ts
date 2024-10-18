@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { DecodedTokenReturn, jwtVerification } from "@/components/user/auth";
+import { Role } from "@/components/utils/utils";
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,13 @@ export async function POST(request: Request) {
       country,
     } = await request.json();
 
+    if (!(role === Role.seller || role === Role.buyer)) {
+      return NextResponse.json(
+        { error: "You can only change role to buyer and seller" },
+        { status: 401 }
+      );
+    }
+    
     const existingUserQuery = await client.query(
       "SELECT * FROM users_table WHERE id = $1",
       [auth.id]
