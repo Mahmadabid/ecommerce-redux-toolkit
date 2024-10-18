@@ -65,6 +65,23 @@ Visit ```http://localhost:3000/api/setup?dummy=dummy``` to setup your database, 
 Visit http://localhost:3000 in your browser to see the app.
 
 ## Features
+### User Management:
+
+User roles include admin, seller, and buyer.
+
+### Roles
+
+**Admin:** Manage users and oversee the platform. To use admin use these credentials.
+``` ruby
+email: admin@a.c
+password: 123
+```
+For admin a super password of `123` is created for this project.
+
+**Seller:** List and manage products for sale.
+
+**Buyer:** Purchase products and view order history.
+
 ### Product Management:
 
 Sellers can create and sell products.
@@ -74,24 +91,6 @@ Buyers can browse and purchase products.
 
 Track orders and sales in real-time.
 Order history is available for both buyers and sellers.
-
-### User Management:
-
-Admins can manage users, including sellers and buyers.
-User roles include admin, seller, and buyer.
-
-### Roles
-
-**Admin:** Manage users and oversee the platform. To use admin use these credentials.
-```
-email: admin@a.c
-password: 123
-```
-For admin a super password of `123` is created for this project.
-
-**Seller:** List and manage products for sale.
-
-**Buyer:** Purchase products and view order history.
 
 ### Technologies Used
 - **Next.js 13**: For server-side rendering, static site generation, and API routes.
