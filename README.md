@@ -1,28 +1,30 @@
 # Pixel Market
-Pixel Market is an e-commerce platform that allows users to create, sell, and buy products. It provides functionality to track purchases and sales, and includes an admin panel for managing users.
+[Pixel Market](https://pixel-marketplace-redux.vercel.app/) is an e-commerce platform that allows users to create, sell, and buy products. It provides functionality to track purchases and sales, and includes an admin panel for managing users.
 
 ## Installation
 To run the project locally, follow all of these steps:
 
-- Clone the repository:
+*Make sure to** follow step 7**, otherwise this wont work.*
+
+1. Clone the repository:
 
 ``` ruby
 git clone https://github.com/Mahmadabid/ecommerce-redux-toolkit/
 ```
 
-- Navigate to the project directory:
+2. Navigate to the project directory:
 
 ``` ruby
 cd pixel-market
 ```
 
-- Install dependencies:
+3. Install dependencies:
 
 ``` ruby
 npm install
 ```
 
-- Set up the database:
+4. Set up the database:
 
 Ensure you have CockroachDB set up and running.
 
@@ -30,7 +32,7 @@ Visit [CockroachDB](https://cockroachlabs.cloud/get-started)
 
 https://github.com/user-attachments/assets/e8d9455d-91aa-4eaf-965d-1f45462c6c93
 
-- Update the projects environment file.
+5. Update the projects environment file.
 
 ``` ruby
 # NEXT_PUBLIC_API_BASE_URL='https://pixel-marketplace-redux.vercel.app/api/'
@@ -44,19 +46,19 @@ SUPER_PASSWORD='q17aL0PDSRR42XaPAt.OD6mDF2HlA10yjPwCGyktiTFtF56Ddq'
 DATABASE_URL='Add_cockroachdb_database_url_here'
 ```
 
-- Run the development server:
+6. Run the development server:
 
 ``` ruby
 npm run dev
 ```
 
-- Setup Database (SQL Tables) and Create Admin:
+7. Setup Database (SQL Tables) and Create Admin:
 
 Visit ```http://localhost:3000/api/setup``` to setup your database and create admin user
 
 <br/>
 
-- Setup Dummy Data, Database (SQL Tables) and Create Admin:
+8. Setup Dummy Data, Database (SQL Tables) and Create Admin:
 
 Visit ```http://localhost:3000/api/setup?dummy=dummy``` to setup your database, create all users including admin and pre add products.
 
