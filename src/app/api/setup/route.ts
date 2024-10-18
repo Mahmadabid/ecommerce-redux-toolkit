@@ -149,7 +149,7 @@ export async function GET(req: Request) {
           country: "USA",
         },
         {
-          username: "seller_susan",
+          username: "susan",
           email: "susan@example.com",
           password:
             "$2b$10$hnMGbs.SUakd97lVv.pbXOPMObX9RDseo5A7e6fILO9TM3PKuYrxW",

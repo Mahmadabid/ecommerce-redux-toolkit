@@ -16,10 +16,7 @@ interface UpdateProps {
   user: UserType;
 }
 
-const UpdateUser: React.FC<UpdateProps> = ({
-  setNotification,
-  user,
-}) => {
+const UpdateUser: React.FC<UpdateProps> = ({ setNotification, user }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -78,13 +75,13 @@ const UpdateUser: React.FC<UpdateProps> = ({
     }, 5000);
   };
 
-  const [
-    updateUser,
-    { error: updateUserError, isLoading: updateUserLoading },
-  ] = useUpdateUserMutation();
+  const [updateUser, { error: updateUserError, isLoading: updateUserLoading }] =
+    useUpdateUserMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
     try {
       const hasChanges =
         name !== initialUserData.name ||
@@ -100,19 +97,19 @@ const UpdateUser: React.FC<UpdateProps> = ({
         return;
       }
 
-      const {error: updateUserFinalError} = await updateUser({
+      const { error: updateUserFinalError } = await updateUser({
         name,
         address,
         city,
         country,
         zipcode,
         password,
-        role,
+        role: user.role === Role.admin ? undefined : role,
       });
 
       if (!updateUserFinalError) {
         handleUpdateNotification();
-        setChange(state => !state)
+        setChange((state) => !state);
       }
     } catch (error) {
       setError(error as string);
@@ -123,9 +120,7 @@ const UpdateUser: React.FC<UpdateProps> = ({
     <form onSubmit={handleSubmit}>
       {error && <p className="text-red-500 my-2">{error}</p>}
       <p className="text-red-500 my-2">
-        {updateUserError
-          ? handleRtkQueryError(updateUserError)
-          : null}
+        {updateUserError ? handleRtkQueryError(updateUserError) : null}
       </p>
       <div className="grid grid-cols-1 fsm:grid-cols-2 mt-6 mx-auto gap-4 gap-x-16">
         <FloatingLabelInput

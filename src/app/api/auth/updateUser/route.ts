@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { DecodedTokenReturn, jwtVerification } from "@/components/user/auth";
 import { Role } from "@/components/utils/utils";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   const client = await pool.connect();
@@ -18,29 +18,29 @@ export async function POST(request: Request) {
 
     const auth: DecodedTokenReturn = verificationResult;
 
-    const {
-      password,
-      role,
-      name,
-      city,
-      zipcode,
-      address,
-      country,
-    } = await request.json();
+    const { password, role, name, city, zipcode, address, country } =
+      await request.json();
 
-    if (!(role === Role.seller || role === Role.buyer)) {
+    if (role && !(role === Role.seller || role === Role.buyer)) {
       return NextResponse.json(
-        { error: "You can only change role to buyer and seller" },
+        { error: "You can only change role of buyer and seller" },
         { status: 401 }
       );
     }
-    
+
     const existingUserQuery = await client.query(
       "SELECT * FROM users_table WHERE id = $1",
       [auth.id]
     );
     if (existingUserQuery.rows.length === 0)
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+    if (existingUserQuery.rows[0].role === Role.admin && role) {
+      return NextResponse.json(
+        { error: "Can not change admin role" },
+        { status: 405 }
+      );
+    }
 
     const existingUser = existingUserQuery.rows[0];
 
@@ -50,7 +50,10 @@ export async function POST(request: Request) {
 
     const fields = {
       password: hashedPassword,
-      role: role !== existingUser.role ? role : undefined,
+      role:
+        role !== existingUser.role && existingUser.role !== Role.admin
+          ? role
+          : undefined,
       name: name !== existingUser.name ? name : undefined,
       city: city !== existingUser.city ? city : undefined,
       zipcode: zipcode !== existingUser.zipcode ? zipcode : undefined,
@@ -91,7 +94,7 @@ export async function POST(request: Request) {
         id: auth.id,
         username: existingUser.username,
         email: existingUser.email,
-        role,
+        role: existingUser.role === Role.admin ? Role.admin : role,
         name,
         city,
         token: newToken,
