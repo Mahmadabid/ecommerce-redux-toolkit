@@ -78,7 +78,7 @@ password: 123
 ```
 For admin a super password of `123` is created for this project. Admin dashboard is provided in [profile page](https://pixel-marketplace-redux.vercel.app/profile)
 
-**Seller:** List and manage products for sale. Seller created by **Step 8** will have ```password: 123```. You can change it anytime. The super password is only for admin. Sellers can manage products in [store page](https://pixel-marketplace-redux.vercel.app/store).
+**Seller:** List and manage products for sale. Seller created by **Step 8** will have ```password: 123```. You can change it anytime. The super password is only for admin. Sellers can manage products in [store page](https://pixel-marketplace-redux.vercel.app/store). You can access seller page by clicking on the seller username in a product.
 
 There are 2 types of seller pages.
 1. [Server side fetch](https://github.com/Mahmadabid/ecommerce-redux-toolkit/blob/master/src/app/seller/%5Bseller%5D/page.tsx). It fetches data on server side and populates the seller page.
