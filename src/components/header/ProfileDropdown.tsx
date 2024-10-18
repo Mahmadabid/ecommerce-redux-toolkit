@@ -84,13 +84,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
               {email}
             </div>
           )}
-          {!loggedOut && (
-            <Link onClick={handleDropdownToggle} href="/profile">
-              <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
-                Profile
-              </h1>
-            </Link>
-          )}
+          <Link onClick={handleDropdownToggle} href="/profile">
+            <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              Profile
+            </h1>
+          </Link>
           <Link onClick={handleDropdownToggle} href="/products">
             <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
               Products
@@ -101,13 +99,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
               View Order
             </h1>
           </Link>
-          {!loggedOut && (
-            <Link onClick={handleDropdownToggle} href="/store">
-              <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
-                Store
-              </h1>
-            </Link>
-          )}
+          <Link onClick={handleDropdownToggle} href="/store">
+            <h1 className="block hover:bg-blue-500 font-[550] border-b border-gray-100 hover:rounded hover:text-white px-4 py-2 text-gray-800">
+              Store
+            </h1>
+          </Link>
           {loggedOut ? (
             <Link onClick={handleDropdownToggle} href="/login">
               <h1 className="block w-full text-left px-4 py-2 bg-sky-100 rounded text-black font-medium hover:rounded hover:text-white hover:bg-teal-500">
