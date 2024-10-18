@@ -4,7 +4,7 @@
 ## Installation
 To run the project locally, follow all of these steps:
 
-*Make sure to** follow step 7**, otherwise this wont work.*
+*Make sure to **follow step 7**, otherwise this wont work.*
 
 1. Clone the repository:
 
