@@ -54,7 +54,7 @@ npm run dev
 
 7. Setup Database (SQL Tables) and Create Admin:
 
-Visit ```http://localhost:3000/api/setup``` to setup your database and create admin user
+Visit ```http://localhost:3000/api/setup``` to setup your database and create admin user. See the Roles section below for admin email and password.
 
 <br/>
 
@@ -78,9 +78,9 @@ password: 123
 ```
 For admin a super password of `123` is created for this project.
 
-**Seller:** List and manage products for sale.
+**Seller:** List and manage products for sale. Seller created by **Step 8** will have ```password: 123```. You can change it anytime. The super password is only for admin. 
 
-**Buyer:** Purchase products and view order history.
+**Buyer:** Purchase products and view order history. Buyer created by **Step 8** will have ```password: 123```. You can change it anytime. The super password is only for admin. 
 
 ### Product Management:
 
